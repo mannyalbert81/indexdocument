@@ -1,97 +1,98 @@
-
-     <?php include("view/modulos/head.php"); ?>
-    
 <!DOCTYPE HTML>
 <html lang="es">
     <head>
-        <meta charset="utf-8"/>
-        <title>Login aDocument 2015</title>
-       <link rel="stylesheet" href="view/css/bootstrap.css">
-    
-  <script src="view/css/jquery.js"></script>
-  <script src="view/css/bootstrap.min.js"></script>
-  <script src="view/css/bootstrapValidator.min.js"></script>
-  <script src="view/css/ValidarLogin.js"></script>
-	
-	
-        <style>
-			body {
+      <meta charset="utf-8"/>
+      <title>Login aDocument 2015</title>
+      <link rel="stylesheet" href="view/css/bootstrap.css">
+      <script src="view/css/jquery.js"></script>
+	  <script src="view/css/bootstrap.min.js"></script>
+	  <script src="view/css/bootstrapValidator.min.js"></script>
+	  <script src="view/css/ValidarLogin.js"></script>
+	  <link rel="stylesheet" href="view/font-awesome/css/font-awesome.min.css">
+	  
+	  
+	  <style>
+	  		.login{
+	  		border-radius: 20px 20px 20px 20px;
+			-moz-border-radius: 20px 20px 20px 20px;
+			-webkit-border-radius: 20px 20px 20px 20px;
+			border: 1.5px solid #000000;
 			
-			    /* Ubicación de la imagen */
-		  background-image: url(view/images/wallpaper.png);
-		
-		  /* Nos aseguramos que la imagen de fondo este centrada vertical y
-		    horizontalmente en todo momento */
-		  background-position: center center;
-		
-		  /* La imagen de fondo no se repite */
-		  background-repeat: no-repeat;
-		
-		  /* La imagen de fondo está fija en el viewport, de modo que no se mueva cuando
-		     la altura del contenido supere la altura de la imagen. */
-		  background-attachment: fixed;
-		
-		  /* La imagen de fondo se reescala cuando se cambia el ancho de ventana
-		     del navegador */
-		  background-size: cover;
-		
-		  /* Fijamos un color de fondo para que se muestre mientras se está
-		    cargando la imagen de fondo o si hay problemas para cargarla  */
-		  background-color: #464646;
+			-webkit-box-shadow: 0 20px 6px -6px #777;
+			-moz-box-shadow: 0 20px 6px -6px #777;
+			box-shadow: 0 20px 6px -6px #777;
 			}
-			</style>
-    </head>
+			
+			.fondo{
+
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#020000+0,7db9e8+100&1+0,0+100 */
+background: -moz-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
+background: -webkit-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
+background: radial-gradient(ellipse at center,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020000', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+ }
+			
+
+	  		
+	  </style>
+	 </head>
    
-    <body>
-	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-       
-   
-    
-        <form id="form-login" action="<?php echo $helper->url("usuarios","Loguear"); ?>" method="post"  class="col-lg-6" style=" padding-top:100px;">
-        
-        
-		 <div id="login-overlay" class="modal-dialog" style="padding-left: 50px" >
-      <div class="modal-content" >
-          
-          <div class="modal-body" >
-              
-              <div class="row">
-               <div class="col-lg-6 col-md-3">
-                      <div class="well">
-                              <div class="form-group">
-                                  <label for="usuario" class="control-label">Usuario</label>
-                                  <input type="text" class="form-control" id="usuario" name="usuario" value=""  placeholder="Usuario">
-                                  <span class="help-block"></span>
-                              </div>
-                              <div class="form-group">
-                                  <label for="clave" class="control-label">Password</label>
-                                  <input type="password" class="form-control" id="clave" name="clave" value="" placeholder="Password">
-                                  <span class="help-block"></span>
-                              </div>
-                             
-                              <button type="submit" class="btn btn-success btn-block" onclick="verificar()">Login</button>
-                               
-                      </div>
-                  </div>
-                  
-                		  <div class="col-lg-6 col-md-3">
-		                      <p class="lead">Consejos de Seguridad <span class="text-success"></span></p>
-		                      <ul class="list-unstyled" style="line-height: 2">
-		                          <li><span class="fa fa-check text-success"></span> Recuerda tu usuario y tu clave.</li>
-		                          <li><span class="fa fa-check text-success"></span> No enseñes a nadie tu clave.</li>
-		                          <li><span class="fa fa-check text-success"></span> La clave es personal.</li>
-		                          <li><span class="fa fa-check text-success"></span> Cuídala.</li>
-		                     
-		                      </ul>
-		                  </div>
-              </div>
-              
-          </div>
-      </div>
- </div>
-		
-		
-        </form>
+     <body class="fondo">
+	        <form id="form-login" action="<?php echo $helper->url("usuarios","Loguear"); ?>" method="post"  class="col-lg-12" style=" padding-top:150px;">
+                <div class="col-lg-12 col-md-12">
+                <div class="col-lg-4 col-md-4">
+                </div>
+                <div class="col-lg-4 col-md-4">
+                <div class="col-lg-1 col-md-1">
+                </div>
+                <div class="col-lg-10 col-md-10">
+                 <div class="well login">
+                 
+                  <img src="view/images/logo_adocument.png" class="img-responsive" alt="Responsive image"  width="350" height="350">
+             
+                              <div class="form-group" style="margin-top: 20px";>
+                             <label for="usuario" class="control-label">Usuario:</label></br>
+                             <div class="input-group margin-bottom-sm">
+                             <span class="input-group-addon"><i class="fa fa-address-book fa-fw"></i></span>
+							  <input class="form-control" type="text" id="usuario" name="usuario" placeholder="Username">
+							 <span class="help-block"></span>
+							</div>
+                            </div>
+                            
+                             <div class="form-group">
+                             <label for="clave" class="control-label">Password:</label></br>
+                             <div class="input-group margin-bottom-sm">
+                             <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+							  <input class="form-control" type="password" id="clave" name="clave" placeholder="Password">
+							 <span class="help-block"></span>
+							 </div>
+                             </div>
+                            
+						    <div class="col-xs-12 col-md-12 col-lg-12" style="text-align: center; margin-top:20px;">
+						    <div class="col-xs-2 col-md-2 col-lg-2" style="text-align: center;">
+						    </div>
+						    <div class="col-xs-8 col-md-8 col-lg-8" style="text-align: center;">
+						    <div class="form-group">
+				                                 <button type="submit" class="btn btn-success btn-block" ><i class="fa fa-unlock fa-spin" aria-hidden="true"></i> Login</button>
+				          
+				            </div>
+						    </div>
+						    <div class="col-xs-2 col-md-2 col-lg-2" style="text-align: center;">
+						    </div>
+						    </div></br></br></br></br>
+						    
+						    
+                </div>
+                </div>
+                <div class="col-lg-1 col-md-1">
+                </div>
+                
+               </div>
+                <div class="col-lg-4 col-md-4">
+               </div>
+               </div>
+  			</form>
         
     	   <?php include("view/modulos/footer.php"); ?>
           
