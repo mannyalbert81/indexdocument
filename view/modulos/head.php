@@ -54,7 +54,7 @@ $(document).ready(function(){
   <div class="row head" >
   
   <div style=" margin-top: 20px; "   class="col-xs-6 col-md-8"  >
-  <img src="view/images/logo_adocument.png" class="img-responsive" alt="Responsive image"  width="350" height="350">
+  <img src="view/images/logoidocument.png" class="img-responsive" alt="Responsive image"  width="350" height="350">
   <br>
   </div>
   
