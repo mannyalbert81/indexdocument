@@ -52,7 +52,7 @@
                 <div class="col-lg-10 col-md-10">
                  <div class="well login">
                  
-                  <img src="view/images/logoidocument.png" class="img-responsive" alt="Responsive image"  width="350" height="350">
+                  <img src="view/images/logoidoc.gif" class="img-responsive" alt="Responsive image"  width="350" height="350">
              
                               <div class="form-group" style="margin-top: 20px";>
                              <label for="usuario" class="control-label">Usuario:</label></br>
