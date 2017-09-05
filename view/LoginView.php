@@ -24,14 +24,17 @@
 			}
 			
 			.fondo{
+			
+			/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#020000+0,7db9e8+100&1+0,0+100 */
+			background: -moz-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
+			background: -webkit-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
+			background: radial-gradient(ellipse at center,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020000', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#020000+0,7db9e8+100&1+0,0+100 */
-background: -moz-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%, rgba(125,185,232,0) 100%); /* FF3.6-15 */
-background: -webkit-radial-gradient(center, ellipse cover,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* Chrome10-25,Safari5.1-6 */
-background: radial-gradient(ellipse at center,  rgba(2,0,0,1) 0%,rgba(125,185,232,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020000', endColorstr='#007db9e8',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-
- }
+             }
+             
+           
+             
 			
 
 	  		
@@ -70,15 +73,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020000', end
                              </div>
                             
 						    <div class="col-xs-12 col-md-12 col-lg-12" style="text-align: center; margin-top:20px;">
-						    <div class="col-xs-2 col-md-2 col-lg-2" style="text-align: center;">
+						    <div class="col-xs-12 col-md-2 col-lg-2" style="text-align: center;">
 						    </div>
-						    <div class="col-xs-8 col-md-8 col-lg-8" style="text-align: center;">
+						    <div class="col-xs-12 col-md-8 col-lg-8" style="text-align: center;">
 						    <div class="form-group">
 				                                 <button type="submit" class="btn btn-success btn-block" ><i class="fa fa-unlock fa-spin" aria-hidden="true"></i> Login</button>
 				          
 				            </div>
 						    </div>
-						    <div class="col-xs-2 col-md-2 col-lg-2" style="text-align: center;">
+						    <div class="col-xs-12 col-md-2 col-lg-2" style="text-align: center;">
 						    </div>
 						    </div></br></br></br></br>
 						    
