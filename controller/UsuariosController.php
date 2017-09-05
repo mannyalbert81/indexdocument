@@ -410,6 +410,15 @@ public function index(){
 		
 	}
 	
+	public function irInicio()
+	{
+		session_start();
+		$_usuario="";
+		 $this->view("Bienvenida",array(
+    				"allusers"=>$_usuario
+	    		));
+		
+	}
 	
 }
 ?>
