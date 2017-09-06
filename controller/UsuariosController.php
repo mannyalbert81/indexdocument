@@ -4,6 +4,206 @@ class UsuariosController extends ControladorBase{
     public function __construct() {
         parent::__construct();
     }
+  
+    
+    public function index10(){
+    	
+    	
+    	$usuarios = new UsuariosModel();
+    	$columnas = "usuarios.clave_usuario, usuarios.id_usuario,  usuarios.nombre_usuario, usuarios.usuario_usuario ,  usuarios.telefono_usuario, usuarios.celular_usuario, usuarios.correo_usuario, rol.nombre_rol, estado.nombre_estado, rol.id_rol, estado.id_estado ";
+    	$tablas   = "public.rol,  public.usuarios, public.estado";
+    	$where    = "rol.id_rol = usuarios.id_rol AND estado.id_estado = usuarios.id_estado";
+    	$id       = "usuarios.nombre_usuario";
+    	//$resultSet=$usuarios->getCondiciones($columnas ,$tablas ,$where, $id);
+    	
+    	
+    	$resultSet=$usuarios->getCantidad("*", $tablas, $where);
+    	
+    	$html="";
+    	
+    	$cantidadResult=(int)$resultSet[0]->total;
+    	
+    	$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
+    	
+    	if($action == 'ajax')
+    	{
+    	
+    		
+    		
+    		
+    		$page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
+    	
+    		$per_page = 15; //la cantidad de registros que desea mostrar
+    		$adjacents  = 10; //brecha entre páginas después de varios adyacentes
+    		$offset = ($page - 1) * $per_page;
+    	
+    		$limit = " LIMIT   '$per_page' OFFSET '$offset'";
+    	
+    	
+    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where, $id, $limit);
+    	
+    		$count_query   = $cantidadResult;
+    	
+    		$total_pages = ceil($cantidadResult/$per_page);
+    	
+    		if ($cantidadResult>0)
+    		{
+    	
+    			$html.='<div class="pull-left">';
+    			$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
+    			$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
+    			$html.='</div><br><br>';
+    			$html.='<section style="overflow-y:auto;">';
+    			$html.='<table class="table table-hover">';
+    			$html.='<thead>';
+    			$html.='<tr class="info">';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Nombre</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Usuario</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Teléfono</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Celular</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Correo</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Rol</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;">Estado</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;"></th>';
+    			$html.='</tr>';
+    			$html.='</thead>';
+    			$html.='<tbody>';
+    	
+    			foreach ($resultSet as $res)
+    			{
+    				$html.='<tr>';
+    				$html.='<td style="font-size: 11px;">'.$res->nombre_usuario.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->usuario_usuario.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->telefono_usuario.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->celular_usuario.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->correo_usuario.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->nombre_rol.'</td>';
+    				$html.='<td style="font-size: 11px;">'.$res->nombre_estado.'</td>';
+    				$html.='<td style="font-size: 11px;">';
+    					
+    				
+    				$html.='</td>';
+    				$html.='</tr>';
+    			}
+    	
+    			$html.='</tbody>';
+    			$html.='</table>';
+    			$html.='</section>';
+    			$html.='<div class="table-pagination pull-right">';
+    			$html.=''. $this->paginate("index.php", $page, $total_pages, $adjacents).'';
+    			$html.='</div>';
+    			$html.='</section>';
+    	
+    				
+    	
+    		}else{
+    	
+    			$html.='<div class="alert alert-warning alert-dismissable">';
+    			$html.='<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+    			$html.='<h4>Aviso!!!</h4> No hay datos para mostrar';
+    			$html.='</div>';
+    	
+    		}
+    	
+    		echo $html;
+    		die();
+    	
+    	
+    	}else
+    	{
+    		//en caso de q la carga de datos venga por controlador
+    			
+    		$page = 1;
+    			
+    		$per_page = 10; //la cantidad de registros que desea mostrar
+    		$adjacents  = 10; //brecha entre páginas después de varios adyacentes
+    		$offset = ($page - 1) * $per_page;
+    			
+    		$limit = " LIMIT   '$per_page' OFFSET '$offset'";
+    			
+    			
+    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where, $id, $limit);
+    			
+    		$total_pages = ceil($cantidadResult/$per_page);
+    			
+    		$filaspaginacion=$this->paginate("index.php", $page, $total_pages, $adjacents);
+    			
+    	}
+    	
+    	
+    	
+    	
+    }
+    
+    
+    
+    
+    
+    public function paginate($reload, $page, $tpages, $adjacents) {
+    
+    	$prevlabel = "&lsaquo; Prev";
+    	$nextlabel = "Next &rsaquo;";
+    	$out = '<ul class="pagination pagination-large">';
+    
+    	// previous label
+    
+    	if($page==1) {
+    		$out.= "<li class='disabled'><span><a>$prevlabel</a></span></li>";
+    	} else if($page==2) {
+    		$out.= "<li><span><a href='javascript:void(0);' onclick='pone_users_registrados(1)'>$prevlabel</a></span></li>";
+    	}else {
+    		$out.= "<li><span><a href='javascript:void(0);' onclick='pone_users_registrados(".($page-1).")'>$prevlabel</a></span></li>";
+    
+    	}
+    
+    	// first label
+    	if($page>($adjacents+1)) {
+    		$out.= "<li><a href='javascript:void(0);' onclick='pone_users_registrados(1)'>1</a></li>";
+    	}
+    	// interval
+    	if($page>($adjacents+2)) {
+    		$out.= "<li><a>...</a></li>";
+    	}
+    
+    	// pages
+    
+    	$pmin = ($page>$adjacents) ? ($page-$adjacents) : 1;
+    	$pmax = ($page<($tpages-$adjacents)) ? ($page+$adjacents) : $tpages;
+    	for($i=$pmin; $i<=$pmax; $i++) {
+    		if($i==$page) {
+    			$out.= "<li class='active'><a>$i</a></li>";
+    		}else if($i==1) {
+    			$out.= "<li><a href='javascript:void(0);' onclick='pone_users_registrados(1)'>$i</a></li>";
+    		}else {
+    			$out.= "<li><a href='javascript:void(0);' onclick='pone_users_registrados(".$i.")'>$i</a></li>";
+    		}
+    	}
+    
+    	// interval
+    
+    	if($page<($tpages-$adjacents-1)) {
+    		$out.= "<li><a>...</a></li>";
+    	}
+    
+    	// last
+    
+    	if($page<($tpages-$adjacents)) {
+    		$out.= "<li><a href='javascript:void(0);' onclick='pone_users_registrados($tpages)'>$tpages</a></li>";
+    	}
+    
+    	// next
+    
+    	if($page<$tpages) {
+    		$out.= "<li><span><a href='javascript:void(0);' onclick='pone_users_registrados(".($page+1).")'>$nextlabel</a></span></li>";
+    	}else {
+    		$out.= "<li class='disabled'><span><a>$nextlabel</a></span></li>";
+    	}
+    
+    	$out.= "</ul>";
+    	return $out;
+    }
+   
+    
     
 public function index(){
 	

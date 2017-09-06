@@ -60,14 +60,19 @@ function registra_usr(){
            }
 }
 /***********************************************************************************/
-function pone_users_registrados(){
+function pone_users_registrados(pagina){
+	 var con_datos={
+			   action:'ajax',
+			   page:pagina
+			  };
    $.ajax({
           beforeSend: function(){
-            $("#users_registrados").html("<img src='dist/img/default.gif'></img>");
+            $("#users_registrados").html("<img src='view/images/ajax-loader.gif'></img>");
            },
-          url: 'pone_users_regs.php',
+          url: 'index.php?controller=Usuarios&action=index10',
           type: 'POST',
-          data: null,
+          async: true,
+          data: con_datos,
           success: function(x){
              $("#users_registrados").html(x);
              },
