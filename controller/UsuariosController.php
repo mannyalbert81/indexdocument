@@ -327,11 +327,22 @@ public function index(){
     	} 
     	else
     	{
-
-    			$this->view("Login",array(
-    					"allusers"=>""
-    			));
+    		session_start();
     		
+    		if(isset($_SESSION['id_usuario']))
+    		{
+    			$_usuario=$_SESSION['nombre_usuario'];
+    			
+    			$this->view("Bienvenida",array(
+    					"allusers"=>$_usuario
+    			));
+    			
+    		}else{
+    		
+    		$this->view("Login",array(
+    				"allusers"=>""
+    		));
+    	   }
     		
     	}
     	
@@ -409,6 +420,7 @@ public function index(){
 		}
 		
 	}
+	
 	
 	
 }
