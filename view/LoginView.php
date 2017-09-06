@@ -54,14 +54,14 @@
                  
                   <img src="view/images/logoidocument.png" class="img-responsive" alt="Responsive image"  width="350" height="350">
              
-                              <div class="form-group" style="margin-top: 20px";>
+                             <div class="form-group" style="margin-top: 20px";>
                              <label for="usuario" class="control-label">Usuario:</label></br>
                              <div class="input-group margin-bottom-sm">
                              <span class="input-group-addon"><i class="fa fa-address-book fa-fw"></i></span>
-							  <input class="form-control" type="text" id="usuario" name="usuario" placeholder="Username">
+							 <input class="form-control" type="text" id="usuario" name="usuario" placeholder="Username">
 							 <span class="help-block"></span>
-							</div>
-                            </div>
+							 </div>
+                             </div>
                             
                              <div class="form-group">
                              <label for="clave" class="control-label">Password:</label></br>
