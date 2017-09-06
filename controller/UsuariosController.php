@@ -81,7 +81,6 @@ class UsuariosController extends ControladorBase{
     				$html.='<td style="font-size: 11px;">'.$res->nombre_rol.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->nombre_estado.'</td>';
     				$html.='<td style="font-size: 11px;">';
-    				$html.='<a href="'.IP_INT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
     					
     				
     				$html.='</td>';
