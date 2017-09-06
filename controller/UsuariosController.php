@@ -13,34 +13,43 @@ class UsuariosController extends ControladorBase{
     	$columnas = "usuarios.clave_usuario, usuarios.id_usuario,  usuarios.nombre_usuario, usuarios.usuario_usuario ,  usuarios.telefono_usuario, usuarios.celular_usuario, usuarios.correo_usuario, rol.nombre_rol, estado.nombre_estado, rol.id_rol, estado.id_estado ";
     	$tablas   = "public.rol,  public.usuarios, public.estado";
     	$where    = "rol.id_rol = usuarios.id_rol AND estado.id_estado = usuarios.id_estado";
-    	$id       = "usuarios.nombre_usuario";
-    	//$resultSet=$usuarios->getCondiciones($columnas ,$tablas ,$where, $id);
+    	$id       = "usuarios.id_usuario";
     	
     	
-    	$resultSet=$usuarios->getCantidad("*", $tablas, $where);
+    	$where_to = "";
     	
-    	$html="";
     	
-    	$cantidadResult=(int)$resultSet[0]->total;
+    	
     	
     	$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
     	
     	if($action == 'ajax')
     	{
-    	
-    		
-    		
-    		
+    		 
     		$page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
-    	
-    		$per_page = 15; //la cantidad de registros que desea mostrar
+    		$q =    (isset($_REQUEST['q'])&& $_REQUEST['q'] !=NULL)?$_REQUEST['q']:'';
+    		
+    		
+    			 
+    			if($q!=""){$where_to=" AND (usuarios.nombre_usuario like '%$q%' OR usuarios.usuario_usuario like '%$q%' OR usuarios.correo_usuario like '%$q%' OR rol.nombre_rol like '%$q%' OR estado.nombre_estado like '%$q%')";}
+    			 
+    			 
+    			$where_to= $where. $where_to;
+    		
+    		
+    		$html="";
+    		$resultSet=$usuarios->getCantidad("*", $tablas, $where_to);
+    		$cantidadResult=(int)$resultSet[0]->total;
+    		
+    		
+    		$per_page = 10; //la cantidad de registros que desea mostrar
     		$adjacents  = 10; //brecha entre páginas después de varios adyacentes
     		$offset = ($page - 1) * $per_page;
     	
     		$limit = " LIMIT   '$per_page' OFFSET '$offset'";
     	
     	
-    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where, $id, $limit);
+    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where_to, $id, $limit);
     	
     		$count_query   = $cantidadResult;
     	
@@ -53,7 +62,7 @@ class UsuariosController extends ControladorBase{
     			$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
     			$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
     			$html.='</div><br><br>';
-    			$html.='<section style="height:450px; overflow-y:auto;">';
+    			$html.='<section style="height:400px; overflow-y:auto;">';
     			$html.='<table class="table table-hover">';
     			$html.='<thead>';
     			$html.='<tr class="info">';
@@ -123,7 +132,7 @@ class UsuariosController extends ControladorBase{
     		$limit = " LIMIT   '$per_page' OFFSET '$offset'";
     			
     			
-    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where, $id, $limit);
+    		$resultSet=$usuarios->getCondicionesPag($columnas, $tablas, $where_to, $id, $limit);
     			
     		$total_pages = ceil($cantidadResult/$per_page);
     			

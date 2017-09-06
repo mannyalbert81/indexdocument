@@ -64,12 +64,16 @@ function pone_users_registrados(pagina){
 	 var con_datos={
 			   action:'ajax',
 			   page:pagina
+			   
 			  };
+	 
+	 var q= $("#q").val();
+	 
    $.ajax({
           beforeSend: function(){
             $("#users_registrados").html("<img src='view/images/ajax-loader.gif'></img>");
            },
-          url: 'index.php?controller=Usuarios&action=index10',
+          url: 'index.php?controller=Usuarios&action=index10&q='+q,
           type: 'POST',
           async: true,
           data: con_datos,
