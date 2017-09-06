@@ -53,7 +53,7 @@ class UsuariosController extends ControladorBase{
     			$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
     			$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
     			$html.='</div><br><br>';
-    			$html.='<section style="overflow-y:auto;">';
+    			$html.='<section style="height:450px; overflow-y:auto;">';
     			$html.='<table class="table table-hover">';
     			$html.='<thead>';
     			$html.='<tr class="info">';
@@ -64,6 +64,7 @@ class UsuariosController extends ControladorBase{
     			$html.='<th style="text-align: left;  font-size: 12px;">Correo</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Rol</th>';
     			$html.='<th style="text-align: left;  font-size: 12px;">Estado</th>';
+    			$html.='<th style="text-align: left;  font-size: 12px;"></th>';
     			$html.='<th style="text-align: left;  font-size: 12px;"></th>';
     			$html.='</tr>';
     			$html.='</thead>';
@@ -80,6 +81,7 @@ class UsuariosController extends ControladorBase{
     				$html.='<td style="font-size: 11px;">'.$res->nombre_rol.'</td>';
     				$html.='<td style="font-size: 11px;">'.$res->nombre_estado.'</td>';
     				$html.='<td style="font-size: 11px;">';
+    				$html.='<a href="'.IP_INT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
     					
     				
     				$html.='</td>';
