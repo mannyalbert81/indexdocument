@@ -4,7 +4,7 @@
      <title>Bienvenido - aDocument 2015</title>
       <?php include("view/modulos/links.php"); ?>
     </head>
-    <body  style="background-color: #F6FADE">
+    <body  style="background-color: #F6FADE;"  onload="revisa_compras();">
      <div class="wrapper">
 
       <!-- Main Header -->

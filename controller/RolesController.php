@@ -202,6 +202,10 @@ class RolesController extends ControladorBase{
 	
 	}
 	
+	public function traerRoles()
+	{
+		
+	}
 	
 	
 }
