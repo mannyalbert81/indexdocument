@@ -1,15 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="es">
     <head>
-      <meta charset="utf-8"/>
+      
       <title>Login aDocument 2015</title>
-      <link rel="stylesheet" href="view/css/bootstrap.css">
-      <script src="view/css/jquery.js"></script>
-	  <script src="view/css/bootstrap.min.js"></script>
-	  <script src="view/css/bootstrapValidator.min.js"></script>
-	  <script src="view/css/ValidarLogin.js"></script>
-	  <link rel="stylesheet" href="view/font-awesome/css/font-awesome.min.css">
-	  
+      
+      <?php include 'view/modulos/links.php';?>
+      
 	  
 	  <style>
 	  		.login{
@@ -77,7 +73,7 @@
 						    </div>
 						    <div class="col-xs-12 col-md-8 col-lg-8" style="text-align: center;">
 						    <div class="form-group">
-				                                 <button type="submit" class="btn btn-success btn-block" ><i class="fa fa-unlock fa-spin" aria-hidden="true"></i> Login</button>
+				           <button type="submit" class="btn btn-success btn-block" ><i class="fa fa-unlock fa-spin" aria-hidden="true"></i> Login</button>
 				          
 				            </div>
 						    </div>

@@ -6,7 +6,7 @@
               <img src="view/images/avatar.png" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
-              <p><?php echo $_SESSION['nombre_de_usuario'] ?></p>
+              <p><?php echo $_SESSION['nombre_usuario'] ?></p>
               <!-- Status -->
               <a href="#"><i class="fa fa-circle text-success"></i> Conectado</a>
             </div>

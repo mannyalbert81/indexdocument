@@ -1,4 +1,4 @@
-    <a href="<?php echo $helper->url("usuarios","irInicio"); ?>" class="logo">
+    <a href="<?php echo $helper->url("usuarios","Loguear"); ?>" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b>S</b>M</span>
           <!-- logo for regular state and mobile devices -->
@@ -114,14 +114,14 @@
                   <!-- The user image in the navbar-->
                   <img src="view/images/avatar.png" class="user-image" alt="User Image">
                   <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                  <span class="hidden-xs"><?php echo $_SESSION['nombre_de_usuario']; ?></span>
+                  <span class="hidden-xs"><?php echo $_SESSION['nombre_usuario']; ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- The user image in the menu -->
                   <li class="user-header">
                     <img src="view/images/avatar.png" class="img-circle" alt="User Image">
                     <p>
-                      Usuario: <?php echo $_SESSION['nombre_de_usuario']; ?>
+                      Usuario: <?php echo $_SESSION['nombre_usuario']; ?>
                       <!--<small>Member since Nov. 2012</small>-->
                     </p>
                   </li>

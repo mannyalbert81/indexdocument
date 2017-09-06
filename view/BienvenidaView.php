@@ -42,7 +42,7 @@
             <small><?php echo $fecha; ?></small>
           </h1>
           <ol class="breadcrumb">
-            <li><a href="<?php echo $helper->url("usuarios","irInicio"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="<?php echo $helper->url("usuarios","Loguear"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Inicio</li>
           </ol>
         </section>
