@@ -78,6 +78,7 @@ function pone_users_registrados(pagina){
           async: true,
           data: con_datos,
           success: function(x){
+        	  $("#nuevo_usuario").html('');
              $("#users_registrados").html(x);
              },
            error: function(jqXHR,estado,error){
@@ -87,3 +88,32 @@ function pone_users_registrados(pagina){
            });
 }
 /*******************************************************************************/
+
+
+
+
+function nuevo_usr(){
+	 var con_datos={
+			   nuevo:'nuevo',
+			  };
+	 
+	 
+  $.ajax({
+         beforeSend: function(){
+        	
+         
+          },
+         url: 'index.php?controller=Usuarios&action=index11',
+         type: 'POST',
+         async: true,
+         data: con_datos,
+         success: function(x){
+        	  $("#users_registrados").html('');
+            $("#nuevo_usuario").html(x);
+            },
+          error: function(jqXHR,estado,error){
+            $("#nuevo_usuario").html('Hubo un error: '+estado+' '+error);
+            alert("Hubo un error al solicitar nueveo usuario");
+          }
+          });
+}

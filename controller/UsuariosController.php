@@ -6,9 +6,143 @@ class UsuariosController extends ControladorBase{
     }
   
     
+    public function index11(){
+    	
+    	session_start();
+    	$rol=new RolesModel();
+    	$resultRol = $rol->getAll("nombre_rol");
+    
+    	$estado = new EstadoModel();
+    	$resultEst = $estado->getAll("nombre_estado");
+    	
+    	$nuevo = (isset($_REQUEST['nuevo'])&& $_REQUEST['nuevo'] !=NULL)?$_REQUEST['nuevo']:'';
+    	if($nuevo!=""){
+    		
+    		$html="";
+    		$html.='<div class="panel panel-info" style="margin-top:20px;">';
+    		$html.='<div class="panel-heading">';
+    		$html.='<h4><i class="glyphicon glyphicon-edit"></i> Insertar Usuarios</h4>';
+    		$html.='</div>';
+    		$html.='<div class="panel-body">';
+    		$html.='<div class="row">';
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="nombre_usuario" class="control-label">Nombres Usuario</label>';
+    		$html.='<input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" value=""  placeholder="Nombres">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="usuario_usuario" class="control-label">Usuario</label>';
+    		$html.='<input type="text" class="form-control" id="usuario_usuario" name="usuario_usuario" value=""  placeholder="Usuario">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="clave_usuario" class="control-label">Password</label>';
+    		$html.='<input type="password" class="form-control" id="clave_usuario" name="clave_usuario" value=""  placeholder="Password">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="clave_usuario_r" class="control-label">Repita Password</label>';
+    		$html.='<input type="password" class="form-control" id="clave_usuario_r" name="clave_usuario_r" value=""  placeholder="Repita Password">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="row">';
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="telefono_usuario" class="control-label">Teléfono Usuario</label>';
+    		$html.='<input type="text" class="form-control" id="telefono_usuario" name="telefono_usuario" value=""  placeholder="Teléfono">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="celular_usuario" class="control-label">Celular Usuario</label>';
+    		$html.='<input type="text" class="form-control" id="celular_usuario" name="celular_usuario" value=""  placeholder="Celular">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="col-xs-6 col-md-6">';
+    		$html.='<div class="form-group">';
+    		$html.='<label for="correo_usuario" class="control-label">Correo Usuario</label>';
+    		$html.='<input type="text" class="form-control" id="correo_usuario" name="correo_usuario" value=""  placeholder="Correo">';
+    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		$html.='<div class="row">';
+    		$html.='<div class="col-xs-6 col-md-3">';
+    		$html.='<div class="form-group">';
+    		
+							    		$html.='<label for="id_rol" class="control-label">Rol </label>';
+							    		$html.='<select name="id_rol" id="id_rol"  class="form-control" >';
+							    		$html.='<option value="" selected="selected">--Seleccione--</option>';
+							    		foreach ($resultRol as $res)
+							    		{
+							    			$html.='<option value="'.$res->id_rol.'">'.$res->nombre_rol.'</option>';
+							    			 
+							    		}
+							    		$html.='</select> ';
+							    		$html.='<span class="help-block"></span>';
+    		$html.='</div>';
+    		$html.='</div>';
+    		
+    		            
+			    		
+			    		$html.='<div class="col-xs-6 col-md-3">';
+			    		$html.='<div class="form-group">';
+			    		                                $html.=' <label for="id_estado" class="control-label">Estado </label>';
+    		                                $html.=' <select name="id_estado" id="id_estado"  class="form-control" >';
+    		                                $html.='<option value="" selected="selected">--Seleccione--</option>';
+    		                                foreach ($resultEst as $res)
+    		                                {
+    		                                	$html.='<option value="'.$res->id_estado.'">'.$res->nombre_estado.'</option>';
+    		                                	 
+    		                                }
+    										
+    										$html.=' </select> ';
+    		                                $html.='<span class="help-block"></span>';
+    		            $html.='</div>';
+    		            $html.='</div>';
+    					$html.='</div>';
+    			         
+    			        $html.='<div class="row">';
+    				    $html.='<div class="col-xs-12 col-md-12 col-lg-12" style="text-align: center; margin-top:40px">';
+    				    $html.='<div class="form-group">';
+    		                                  $html.='<button type="submit" id="Guardar" name="Guardar" onclick="registra_usr();" class="btn btn-success">Guardar</button>';
+    		            $html.='</div>';
+    				    $html.='</div>';
+    				    $html.='</div>';
+    			         
+    			         
+    			        $html.=' </div>';
+    			        $html.='</div>';
+    		
+    		
+    			        echo $html;
+    			        die();
+    	}
+    	
+    	
+    }
+    
     public function index10(){
     	
-    	
+    	session_start();
     	$usuarios = new UsuariosModel();
     	$columnas = "usuarios.clave_usuario, usuarios.id_usuario,  usuarios.nombre_usuario, usuarios.usuario_usuario ,  usuarios.telefono_usuario, usuarios.celular_usuario, usuarios.correo_usuario, rol.nombre_rol, estado.nombre_estado, rol.id_rol, estado.id_estado ";
     	$tablas   = "public.rol,  public.usuarios, public.estado";
