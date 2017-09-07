@@ -73,3 +73,16 @@ function cancelaNuevoRol(){
     $("#nombre_rol").focus();
 }
 /************************************************************************************/
+function tabMenu(elemento){
+	
+	$('.nav.nav-tabs.pull-right li').removeClass('active');
+    $('#'+elemento).addClass('active');
+    enlace = $('#'+elemento+' a:first');
+    $('#listado').tab('hide');
+    $('#nuevo').tab('show');
+    //$('#myTabs a[href="#' + enlace.attr('href') + '"]').tab('show');
+    //$(enlace.attr('href')).tab('show');
+    
+   
+}
+/************************************************************************************/

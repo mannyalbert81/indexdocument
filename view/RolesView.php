@@ -5,7 +5,7 @@
       <?php include("view/modulos/links.php"); ?>
       <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
     </head>
-    <body  style="background-color: #F6FADE;"  onload="lista_roles();">
+    <body  style="background-color: #F6FADE;"  onload="lista_roles(); tabMenu('nav-add');">
      <div class="wrapper">
 
       <!-- Main Header -->
@@ -55,10 +55,10 @@
           <div class='row'>
            <div class='col-md-12'>
              <div class='nav-tabs-custom'>
-                  <ul class="nav nav-tabs pull-right">
-                  <li><a href="#cambios" data-toggle="tab">Cambiar</a></li>
-                  <li><a href="#nuevo" data-toggle="tab">Agregar</a></li>
-                  <li class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
+                  <ul id="myTabs" class="nav nav-tabs pull-right">
+                  <li id="nav-cambiar" ><a href="#cambios" data-toggle="tab">Cambiar</a></li>
+                  <li id="nav-add"><a href="#nuevo" data-toggle="tab">Agregar</a></li>
+                  <li id="nav-listado" class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
 
                   <li class="pull-left header"><i class="fa fa-file-text"></i> Roles Usuarios.</li>
                 </ul>
