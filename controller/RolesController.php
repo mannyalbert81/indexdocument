@@ -103,19 +103,15 @@ class RolesController extends ControladorBase{
 			
 		if (!empty($resultPer))
 		{
-		
-		
-		
+			
 			$resultado = null;
 			$roles=new RolesModel();
-		
-			//_nombre_categorias character varying, _path_categorias character varying
-			if (isset ($_POST["nombre_rol"])   )
-				
+			
+			
+			if (isset ($_POST['nombre_rol']))				
 			{
 				
 				$_nombre_rol = $_POST["nombre_rol"];
-				
 				 
 				$funcion = "ins_rol";
 				$parametros = " '$_nombre_rol'  ";
@@ -124,22 +120,22 @@ class RolesController extends ControladorBase{
 		
 				$roles->setParametros($parametros);
 		
-		
 				$resultado=$roles->Insert();
-		
-		
+				
+				//ver estado del insertado
+				if (strpos($resultado, "Error") !== false) {
+					//hyaerror
+					echo "error";
+				}else{
+					//no hay error
+					echo "1";
+				}
 			}
-			$this->redirect("Roles", "index");
-
+			
 		}
 		else
 		{
-			$this->view("Error",array(
-					"resultado"=>"No tiene Permisos de Insertar Roles"
-		
-			));
-		
-		
+			
 		}
 		
 	}
@@ -202,8 +198,70 @@ class RolesController extends ControladorBase{
 	
 	}
 	
-	public function traerRoles()
+	public function listaRoles()
 	{
+		$roles=new RolesModel();
+		$html="";
+		
+		session_start();
+		
+		if (isset(  $_SESSION['usuario_usuario']) )
+		{
+			$nombre_controladores = "Roles";
+			$id_rol= $_SESSION['id_rol'];
+			$resultPer = $roles->getPermisosVer(" controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+				
+			if (!empty($resultPer))
+			{
+				
+				$columnas = " id_rol, nombre_rol ";
+				$tablas   = "rol";
+				$where    = "1=1";
+				$id       = "nombre_rol";
+					
+				$dtRoles = $roles->getCondiciones($columnas ,$tablas ,$where, $id);
+				
+				if(!empty($dtRoles))
+				{
+					
+					$html .= "<div class='box box-primary'>";
+					$html .= "<div class='box-header'>";
+					$html .= "<h3 class='box-title'>Roles registrados.</h3>";
+					$html .= "</div>";
+					$html .= "<div class='box-body'>";
+					$html .= "<table id='tabla_roles' class='table table-hover table-condensed'>";
+					$html .= "<thead>";
+					$html .= "<tr>";
+					$html .= "<th>Codigo</th><th>Descripcion Rol</th>";
+					$html .= "</tr>";
+					$html .= "</thead>";
+					$html .= "<tbody>";
+					
+					foreach ($dtRoles as $res)
+					{
+					
+						$html .= "<tr>";
+						$html .= "<td style='text-align: center;'>".$res->id_rol."</td>";
+						$html .= "<td style='text-align: center;'>".strtoupper($res->nombre_rol)."</td>";
+						
+						$html .= "</tr>";
+					}
+					$html .= "</tbody>";
+					$html .= "</table>";
+					$html .= "</div>";
+					$html .= "</div>";
+				}
+				
+				}else{
+					$html = "<b>Actualmente no hay articulos registrados...</b>";
+				}
+			}
+			else
+			{
+				$html ="";
+			}
+		
+			echo $html;
 		
 	}
 	

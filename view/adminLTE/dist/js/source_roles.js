@@ -1,135 +1,75 @@
-function trae_roles(){
+function lista_roles(){
    $(document).ready( function (){
      $.ajax({
                beforeSend: function(){
-                 $("#listadoRoles").html("Cargando... <img src='dist/img/default.gif'/>")
+                 $("#listaRoles").html("<b>Actualizando Listado...</b>")
                },
-               url: 'pone_compras_ini.php',
+               url: 'index.php?controller=Roles&action=listaRoles',
                type: 'POST',
                data: null,
                success: function(x){
-                 $("#listadoRoles").html(x);
+                 $("#listaRoles").html(x);
+                 $("#tabla_roles").dataTable({
+                     "lengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]]
+                 } );
                },
               error: function(jqXHR,estado,error){
-                $("#listadoRoles").html("Ocurrio un error al cargar la informacion de compras..."+estado+"    "+error);
+                $("#listaRoles").html("Ocurrio un error al cargar la informacion de compras..."+estado+"    "+error);
               }
             });
    })
 }
 /****************************************************/
-function revisa_ventas(){
- $(document).ready( function (){
-     $.ajax({
-               beforeSend: function(){
-                 $("#pone_ventas").html("Cargando... <img src='dist/img/default.gif'/>")
-               },
-               url: 'pone_ventas_ini.php',
-               type: 'POST',
-               data: null,
-               success: function(x){
-                 $("#pone_ventas").html(x);
-               },
-              error: function(jqXHR,estado,error){
-                $("#pone_ventas").html("Ocurrio un error al cargar la informacion de ventas..."+estado+"    "+error);
-              }
-            });
-   })
-}
-/*********************************************************************************/
-function pone_gastos(){
- $(document).ready( function (){
-     $.ajax({
-               beforeSend: function(){
-                 $("#pone_gastos").html("Cargando... <img src='dist/img/default.gif'></img>")
-               },
-               url: 'pone_gastos_ini.php',
-               type: 'POST',
-               data: null,
-               success: function(x){
-                 $("#pone_gastos").html(x);
-               },
-              error: function(jqXHR,estado,error){
-                $("#pone_gastos").html("Ocurrio un error al cargar la informacion de gastos..."+estado+"    "+error);
-              }
-            });
-   })
-}
-/**************************************************************************************/
-function pone_users(){
- $(document).ready( function (){
-     $.ajax({
-               beforeSend: function(){
-                 $("#pone_users").html("Cargando... <img src='dist/img/default.gif'></img>")
-               },
-               url: 'pone_users_ini.php',
-               type: 'POST',
-               data: null,
-               success: function(x){
-                 $("#pone_users").html(x);
-               },
-              error: function(jqXHR,estado,error){
-                $("#pone_users").html("Ocurrio un error al cargar la informacion de usuarios..."+estado+"    "+error);
-              }
-            });
-   })
-}
-/*************************************************************************************/
-function genera_grafica(){
- $(document).ready(function(){
-     $.getJSON("genera_array_grafica.php", function(json){
-
-          var donut = new Morris.Donut({
-    element: 'line-chart-ventas',
-    resize: true,
-    colors: ["#3c8dbc", "#f56954", "#00a65a"],
-    data: json,
-    hideHover: 'auto'
-  });
-             });
-
-       });
-   }
-/*****************************************************************************/
-function genera_grafica_existe(){
- $(document).ready(function(){
-     $.getJSON("genera_array_existencias.php", function(json){
-
-          var donut = new Morris.Donut({
-    element: 'line-chart-existe',
-    resize: true,
-    colors: ["#3c8dbc", "#f56954", "#00a65a"],
-    data: json,
-    hideHover: 'auto'
-  });
-             });
-
-       });
-   }
- /****************************************************************************/
-
-function revisa_caducidades(){
-  $(document).ready(function(){
+function nuevoRol(){
+    var nombre=$("#nombre_rol").val();
+         
       $.ajax({
-          beforeSend: function(){
-              $("#").html("Cargando... <img src='dist/img/default.gif'></img>")
-          },
-          url: 'analiza_cad_prods.php',
-          type: 'POST',
-          dataType: 'json',
-          data: null,
-          success: function(x){
-              if (x.length > 0) {
-                  $.each(x, function (y, item){
-                      $(".arti_caducos").append("<li><a href='#'><i class='fa fa-barcode'></i>El producto "+x[y].codigo+" esta por caducar...!</a></li>");
-                  });
-
-                  $(".num_noti").html("");
-                  $(".num_noti").html(x.length);
-              }
-          },
-          error: function(jqXHR,estado,error){
+        beforeSend: function(){  },
+        url: 'index.php?controller=Roles&action=InsertaRoles',
+        type: 'POST',
+        data: {nombre_rol:nombre},
+        success: function(x){
+        	console.log(x);
+          $("#btn-nuevo").prop('disabled', true);
+          if(x==1){
+           $("#nombre_rol").prop('disabled', true);
+           lista_roles();
+           var n = noty({
+               text: "Se registro el Rol",
+               theme: 'relax',
+               layout: 'center',
+               type: 'information',
+               timeout: 3000,
+               });
+           $("#nombre_rol").prop('disabled', false);
+           $("#btn-nuevo").prop('disabled', false);           
+           }
+           if(x=="error"){
+           var n = noty({
+           text: "No se registro el Rol, verifique los campos...!",
+           theme: 'relax',
+           layout: 'center',
+           type: 'information',
+           timeout: 2000,
+           });
+           $("#btn-nuevo").prop('disabled', false);
           }
-      });
-  })
+          }
+          ,
+          /**************************/
+        error: function(jqXHR,estado,error){
+          var n = noty({
+           text: "Ocurrio un error al registrar el Rol!",
+           theme: 'relax',
+           layout: 'center',
+           type: 'information',
+           });
+          }
+       });
+   }
+/*******************************************************************************************/
+function cancelaNuevoRol(){
+    $("#nombre_rol").val("");
+    $("#nombre_rol").focus();
 }
-/******************************************************************************/
+/************************************************************************************/
