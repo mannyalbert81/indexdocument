@@ -83,7 +83,7 @@ class RolesController extends ControladorBase{
 		}
 		else 
 		{
-				$this->view("ErrorSesion",array(
+				$this->view("Login",array(
 						"resultSet"=>""
 			
 				));
@@ -232,7 +232,7 @@ class RolesController extends ControladorBase{
 					$html .= "<table id='tabla_roles' class='table table-hover table-condensed'>";
 					$html .= "<thead>";
 					$html .= "<tr>";
-					$html .= "<th>Codigo</th><th>Descripcion Rol</th>";
+					$html .= "<th></th><th>Codigo</th><th>Descripcion Rol</th>";
 					$html .= "</tr>";
 					$html .= "</thead>";
 					$html .= "<tbody>";
@@ -240,7 +240,7 @@ class RolesController extends ControladorBase{
 					foreach ($dtRoles as $res)
 					{
 					
-						$html .= "<tr>";
+						$html .= "<tr><td></td>";
 						$html .= "<td style='text-align: center;'>".$res->id_rol."</td>";
 						$html .= "<td style='text-align: center;'>".strtoupper($res->nombre_rol)."</td>";
 						
@@ -250,8 +250,6 @@ class RolesController extends ControladorBase{
 					$html .= "</table>";
 					$html .= "</div>";
 					$html .= "</div>";
-				}
-				
 				}else{
 					$html = "<b>Actualmente no hay articulos registrados...</b>";
 				}
@@ -260,11 +258,83 @@ class RolesController extends ControladorBase{
 			{
 				$html ="";
 			}
+		}
 		
 			echo $html;
 		
 	}
 	
+	public function editarRoles()
+	{
+		$roles=new RolesModel();
+		$html="";
+		session_start();
+		
+		if (isset(  $_SESSION['usuario_usuario']) )
+		{
+			if(isset($_POST['id_rol']))
+			{
+				$idrol=$_POST['id_rol'];
+				$dtRoles = $roles->getBy("id_rol='$idrol'");
+				
+				if(!empty($dtRoles))
+				{
+					foreach ($dtRoles as $res)
+					{
+						$html.=$this->agregarelementoFormulario("",$res->id_rol,'id_rol','hidden');
+						
+						$html.=$this->agregarelementoFormulario("Nombre Rol:",$res->nombre_rol,'nombre_rol');
+						
+					}
+				}else{$html="0";}
+				
+			}
+		}else 
+		{
+			$html ="";
+		}
+		
+		echo $html;
+	}
+	
+	public function actualizarRoles()
+	{
+		$roles=new RolesModel();
+		$html="";
+		session_start();
+	
+		if (isset(  $_SESSION['usuario_usuario']) )
+		{
+			if(isset($_POST['id_rol']))
+			{
+				if($_POST['id_rol']>0)
+				{
+					$edit_nombre=$_POST['nombre_rol'];
+					$edit_id=$_POST['id_rol'];
+					$colval = " nombre_rol = '$edit_nombre'";
+					$tabla = "rol";
+					$where = "id_rol = '$edit_id'";
+					$resultado=$roles->UpdateBy($colval, $tabla, $where);
+					
+				}
+			}
+		}else
+		{
+			$html ="";
+		}
+	
+		echo $html;
+	}
+	
+	 private function agregarelementoFormulario($titulo=null,$value=null,$key=null,$type='text')
+	{
+		return  "<div class='form-group'>
+				 <label class='col-sm-2 control-label' for='$key'>$titulo</label>
+			     <div class='col-sm-3'>
+			     <input type='$type' id='$key' class='form-control' value='$value' />
+			    </div>
+			    </div>";
+	}
 	
 }
 ?>

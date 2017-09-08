@@ -1,20 +1,9 @@
 <!DOCTYPE HTML>
 <html lang="es">
     <head>
-        <meta charset="utf-8"/>
-        <title>Menu - aDocument 2015</title>
-   
-       <style>
-            input{
-                margin-top:5px;
-                margin-bottom:5px;
-            }
-            .right{
-                float:right;
-            }
-                
-            
-        </style>
+          <title>Menu - aDocument 2015</title>
+   <?php include("view/modulos/links.php"); ?>
+       
     </head>
       <body style="background-color: #F6FADE">
     
@@ -31,8 +20,8 @@
      </form>
   </div>
   </div>
-  		  <footer class="col-lg-12">
-           <?php include("view/modulos/footer.php"); ?>
-        </footer>
+  		 
+   <?php include("view/modulos/footer.php"); ?>
+        
      </body>  
     </html>

@@ -4,6 +4,7 @@
      <title>Bienvenido - aDocument 2015</title>
       <?php include("view/modulos/links.php"); ?>
       <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
+       <link rel="stylesheet" href="view/adminLTE/css/cssroles.css">
     </head>
     <body  style="background-color: #F6FADE;"  onload="lista_roles();">
      <div class="wrapper">
@@ -44,7 +45,7 @@
           </h1>
           <ol class="breadcrumb">
             <li><a href="<?php echo $helper->url("usuarios","Loguear"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Inicio</li>
+            <li class="active">Roles Usuario</li>
           </ol>
         </section>
 
@@ -56,7 +57,7 @@
            <div class='col-md-12'>
              <div class='nav-tabs-custom'>
                   <ul id="myTabs" class="nav nav-tabs pull-right">
-                  <li id="nav-cambiar" ><a href="#cambios" data-toggle="tab">Cambiar</a></li>
+                  <li id="nav-cambiar" ><a href="#editar" data-toggle="tab">Editar</a></li>
                   <li id="nav-add"><a href="#nuevo" data-toggle="tab">Agregar</a></li>
                   <li id="nav-listado" class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
 
@@ -87,21 +88,21 @@
                   </div><!-- /.tab-pane -->
 
 
-                  <div class="tab-pane" id="cambios">
+                  <div class="tab-pane" id="editar">
                     <form class='form-horizontal' onkeypress="return anular(event)">
-                    <div class='form-group'>
-                    <label for="codigo_busqueda_cambio" class="col-sm-2 control-label">Codigo:</label>
+                    <div id="div-codigo-buscar" class='form-group'>
+                    <label for="codigo_editar" class="col-sm-2 control-label">Rol:</label>
                     <div class="col-sm-3">
-                    <input type="text" class="form-control" id='codigo_busqueda_cambio' onchange='busca_articulo_cambio();'  placeholder='Codigo del articulo...'>
+                    <input type="text" class="form-control" id='codigo_editar' onchange='busca_articulo_cambio();'  placeholder='buscar...'>
                     </div>
                     </div>
 
-                    <div id='info_articulo_cambio'></div>
+                    <div id='info_rol_editar'></div>
                     <br>
                     <div class="btn-group">
-                    <button type='button' class='btn btn-primary btn-lg' onclick='busca_articulo_cambio();' id='btn-buscar-cambio'><i class='fa fa-search'></i> Buscar...</button>
-                    <button type='button' class='btn btn-success btn-lg' onclick='procede_cambio();' id='btn-procede-cambio' disabled><i class='fa fa-check-circle'></i> Actualizar...</button>
-                    <button type='button' class='btn btn-danger btn-lg' onclick='cancela_cambios();' id='btn-cancela-cambio' disabled><i class='fa fa-recycle'></i> Cancelar...</button>
+                    <button type='button' class='btn btn-primary btn-lg' onclick='busca_articulo_cambio();' id='btn-buscar-editar'><i class='fa fa-search'></i> Buscar...</button>
+                    <button type='button' class='btn btn-success btn-lg' onclick='actualizarRegistro();' id='btn-procede-editar' disabled><i class='fa fa-check-circle'></i> Actualizar...</button>
+                    <button type='button' class='btn btn-danger btn-lg' onclick='cancela_editar_rol();' id='btn-cancela-editar' disabled ><i class='fa fa-recycle'></i> Cancelar...</button>
                     </div>
 
                     </form>
