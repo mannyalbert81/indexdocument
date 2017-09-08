@@ -49,7 +49,7 @@ function lista_roles(){
 	 	            alert(id + " Ver");
 	 	            break;
 	 	        case "Eliminar":
-	 	            alert(id + " Eliminar");    
+	 	        	elimina_rol(id);   
 	 	            break;
 	 	        default:
 	 	            alert("No existe el valor");
@@ -165,21 +165,25 @@ function EditarRegistro(identificador){
 function actualizarRegistro(){
 	
 	$(document).ready(function(){
-        $.ajax({
+		
+		$.ajax({
         beforeSend: function(){
         	$('#div-codigo-buscar').html('');
         	$('#myTabs a[href="#editar"]').tab('show'); 
          },
         url: 'index.php?controller=Roles&action=actualizarRoles',
         type: 'POST',
-        data: {id_rol:$('#id_rol').val(),nombre_rol:$('#nombre_rol').val()},
+        data: {id_rol:$('#id_rol').val(),nombre_rol:$('#nombre_rol_edit').val()},
         success: function(x){
             if(x==0){
              alert("El codigo del rol, no existe...");
              // $("#btn-buscar-cambio").prop('disabled', false);
             }else{
+            	console.log(x);
+            	lista_roles();
             //$("#codigo_busqueda_cambio").prop('disabled', true);
-            $("#info_rol_editar").html(x);
+            	$('#myTabs a[href="#listado"]').tab('show'); 
+            	cancela_editar_rol();
             }
          },
          error: function(jqXHR,estado,error){
@@ -190,3 +194,56 @@ function actualizarRegistro(){
 	
 }
 /************************************************************************************/
+function cancela_editar_rol(){
+	$('#nombre_rol_edit').val('');
+	$('#myTabs a[href="#listado"]').tab('show'); 
+	 $("#info_rol_editar").html('');
+	 $('#div-codigo-buscar').html('<label for="codigo_editar" class="col-sm-2 control-label">Buscar Rol:</label><div class="col-sm-3">   <input type="text" class="form-control" id="codigo_editar" onchange="busca_articulo_cambio();"  placeholder="buscar...">');
+ 	$('#btn-buscar-editar').css('display','');
+}
+/***********************************************************************************/
+function elimina_rol(identificador){
+    var n = noty({
+           text: "Seguro que desea eliminar fila selecionada...?",
+           theme: 'relax',
+           layout: 'center',
+           type: 'information',
+           buttons     : [
+             {addClass: 'btn btn-primary',
+              text    : 'Si',
+              onClick : function ($noty){
+                   $noty.close();
+                 $.ajax({
+   beforeSend: function(){
+
+    },
+   url: 'index.php?controller=Roles&action=borrarId',
+   type: 'POST',
+   data: {id_rol:identificador},
+   success: function(x){
+      var n = noty({
+       text: "Se elimino la informacion selecionada...!",
+       theme: 'relax',
+       layout: 'center',
+       type: 'information',
+       timeout: 2000,
+     });
+      lista_roles();
+      $('#myTabs a[href="#listado"]').tab('show'); 
+    },
+    error: function(jqXHR,estado,error){
+    }
+    });
+               }
+            },
+            {addClass: 'btn btn-danger',
+             text    : 'No',
+             onClick : function ($noty){
+                $noty.close();
+
+             }
+             }
+           ]
+           });
+  }
+/*************************************************************************************/

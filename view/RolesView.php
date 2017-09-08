@@ -89,7 +89,7 @@
 
 
                   <div class="tab-pane" id="editar">
-                    <form class='form-horizontal' onkeypress="return anular(event)">
+                    <form class='form-horizontal' onkeypress="">
                     <div id="div-codigo-buscar" class='form-group'>
                     <label for="codigo_editar" class="col-sm-2 control-label">Rol:</label>
                     <div class="col-sm-3">

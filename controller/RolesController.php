@@ -142,23 +142,21 @@ class RolesController extends ControladorBase{
 	
 	public function borrarId()
 	{
-
 		session_start();
 		$permisos_rol=new PermisosRolesModel();
 		$nombre_controladores = "Roles";
 		$id_rol= $_SESSION['id_rol'];
-		$resultPer = $permisos_rol->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
-			
+		$resultPer = $permisos_rol->getPermisosBorrar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+		$html="";	
 		if (!empty($resultPer))
 		{
-			if(isset($_GET["id_rol"]))
+			if(isset($_POST["id_rol"]))
 			{
-				$id_rol=(int)$_GET["id_rol"];
+				$id_rol=(int)$_POST["id_rol"];
 		
 				$roles=new RolesModel();
 				
 				$roles->deleteBy(" id_rol",$id_rol);
-				
 				
 			}
 			
@@ -168,12 +166,9 @@ class RolesController extends ControladorBase{
 		}
 		else
 		{
-			$this->view("Error",array(
-				"resultado"=>"No tiene Permisos de Borrar Roles"
 			
-			));
 		}
-				
+		echo $html="";		
 	}
 	
 	
@@ -283,7 +278,7 @@ class RolesController extends ControladorBase{
 					{
 						$html.=$this->agregarelementoFormulario("",$res->id_rol,'id_rol','hidden');
 						
-						$html.=$this->agregarelementoFormulario("Nombre Rol:",$res->nombre_rol,'nombre_rol');
+						$html.=$this->agregarelementoFormulario("Nombre Rol:",$res->nombre_rol,'nombre_rol_edit');
 						
 					}
 				}else{$html="0";}
@@ -316,6 +311,7 @@ class RolesController extends ControladorBase{
 					$where = "id_rol = '$edit_id'";
 					$resultado=$roles->UpdateBy($colval, $tabla, $where);
 					
+					$html="1";
 				}
 			}
 		}else
