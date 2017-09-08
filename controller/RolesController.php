@@ -6,7 +6,53 @@ class RolesController extends ControladorBase{
 		parent::__construct();
 	}
 
-
+	public function index12(){
+	
+		session_start();
+			
+		$i=0;
+		$roles=new RolesModel();
+		$columnas = " id_rol, nombre_rol ";
+		$tablas   = "rol";
+		$where    = "id_rol >0 ";
+		$id       = "id_rol";
+			
+		$resultSet = $roles->getCondiciones($columnas ,$tablas ,$where, $id);
+			
+		
+	
+		$i=count($resultSet);
+	
+		$html="";
+		if($i>0)
+		{
+	
+			$html .= "<div class='col-lg-3 col-xs-6'>";
+			$html .= "<div class='small-box bg-yellow'>";
+			$html .= "<div class='inner'>";
+			$html .= "<h3>$i</h3>";
+			$html .= "<p>Roles Registrados.</p>";
+			$html .= "</div>";
+	
+	
+			$html .= "<div class='icon'>";
+			$html .= "<i class='ion ion-calendar'></i>";
+			$html .= "</div>";
+			$html .= "<a href='index.php?controller=Roles&action=index' class='small-box-footer'>Operaciones con Roles <i class='fa fa-arrow-circle-right'></i></a>";
+			$html .= "</div>";
+			$html .= "</div>";
+	
+	
+		}else{
+	
+			$html = "<b>Actualmente no hay permisos registrados...</b>";
+		}
+	
+		echo $html;
+		die();
+	
+	
+	}
 
 	public function index(){
 	
