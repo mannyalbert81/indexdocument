@@ -159,16 +159,13 @@ class RolesController extends ControladorBase{
 				$roles->deleteBy(" id_rol",$id_rol);
 				
 			}
-			
-			$this->redirect("Roles", "index");
-			
-			
+		
 		}
 		else
 		{
 			
 		}
-		echo $html="";		
+		
 	}
 	
 	

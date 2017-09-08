@@ -49,6 +49,7 @@ function lista_roles(){
 	 	            alert(id + " Ver");
 	 	            break;
 	 	        case "Eliminar":
+	 	        	//alert(id);
 	 	        	elimina_rol(id);   
 	 	            break;
 	 	        default:
@@ -77,7 +78,7 @@ function nuevoRol(){
                theme: 'relax',
                layout: 'center',
                type: 'information',
-               timeout: 3000,
+               timeout: 3000
                });
            $("#nombre_rol").prop('disabled', false);
            $("#btn-nuevo").prop('disabled', false);  
@@ -229,7 +230,7 @@ function elimina_rol(identificador){
        timeout: 2000,
      });
       lista_roles();
-      $('#myTabs a[href="#listado"]').tab('show'); 
+     
     },
     error: function(jqXHR,estado,error){
     }
@@ -240,7 +241,6 @@ function elimina_rol(identificador){
              text    : 'No',
              onClick : function ($noty){
                 $noty.close();
-
              }
              }
            ]
