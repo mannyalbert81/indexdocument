@@ -14,7 +14,7 @@ function lista_usuarios(){
                  } );
                },
               error: function(jqXHR,estado,error){
-                $("#users_registrados").html("Ocurrio un error al cargar la informacion de compras..."+estado+"    "+error);
+                $("#users_registrados").html("Ocurrio un error al cargar la informacion de Usuarios..."+estado+"    "+error);
               }
             });
    })
@@ -261,7 +261,7 @@ function NuevoUsuario(){
     	          /**************************/
     	        error: function(jqXHR,estado,error){
     	          var n = noty({
-    	           text: "Ocurrio un error al registrar el Rol!",
+    	           text: "Ocurrio un error al registrar el Usuario!",
     	           theme: 'relax',
     	           layout: 'center',
     	           type: 'information',

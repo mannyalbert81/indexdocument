@@ -46,7 +46,7 @@
                   <li id="nav-cambiar"><a href="#cambios" data-toggle="tab" >Actualizar</a></li>
                   <li id="nav-add"><a href="#nuevo" data-toggle="tab">Agregar</a></li>
                   <li id="nav-listado" class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
-                  <li class="pull-left header"><i class="fa fa-file-text"></i> Usuarios Registrados.</li>
+                  <li class="pull-left header"><i class="fa fa-file-text"></i> Panel de Usuarios.</li>
                 </ul>
          
          
