@@ -1,119 +1,298 @@
-/********************************************************************/
-function establece_caja(){
- $.ajax({
-          beforeSend: function(){
-           },
-          url: 'establece_caja.php',
-          type: 'POST',
-          data: 'caja='+$("#numcaja").val(),
-          success: function(x){
-            alert("Se establecio el numero de caja en esta sesion...!");
-            window.location='parametros.php';
-             },
-           error: function(jqXHR,estado,error){
-             $("#btn-caja").html('Hubo un error: '+estado+' '+error);
-             alert("Hubo un error al establecer el numero de caja, contacte a soporte inmediatamente...!");
-           }
-           });
-}
-/********************************************************************/
-function establece_name_empresa(){
-    $.ajax({
-          beforeSend: function(){
-           },
-          url: 'estabelece_name_empresa.php',
-          type: 'POST',
-          data: 'name='+$("#nombre_empresa").val()+'&dom='+$("#dom_empresa").val(),
-          success: function(x){
-            alert("Se establecio el nombre de la empresa correctamente...!");
-            window.location='parametros.php';
-             },
-           error: function(jqXHR,estado,error){
-             $("#btn-name").html('Hubo un error: '+estado+' '+error);
-             alert("Hubo un error al establecer el nombre de la empresa, contacte a soporte inmediatamente...!");
-           }
-           });
-}
-/*****************************************************************************/
-function registra_usr(){
-  if($("#nombre").val()==""||$("#clave").val()==""||$("#pass").val()==""){
-    alert("Debes de completar todos los campos...");
-    $("#nombre").focus();
-  }else{
-    $.ajax({
-          beforeSend: function(){
-           },
-          url: 'registra_users.php',
-          type: 'POST',
-          data: 'nombre='+$("#nombre").val()+'&clave='+$("#clave").val()+'&pass='+$("#pass").val(),
-          success: function(x){
-              if(x!='0'){
-                alert("Se registro el usuario correctamente...");
+function lista_usuarios(){
+   $(document).ready( function (){
+     $.ajax({
+               beforeSend: function(){
+                 $("#users_registrados").html("<b>Actualizando Listado...</b>")
+               },
+               url: 'index.php?controller=Usuarios&action=index10',
+               type: 'POST',
+               data: null,
+               success: function(x){
+                 $("#users_registrados").html(x);
+                 $("#tabla_usuarios").dataTable({
+                     "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+                 } );
+               },
+              error: function(jqXHR,estado,error){
+                $("#users_registrados").html("Ocurrio un error al cargar la informacion de compras..."+estado+"    "+error);
               }
-              pone_users_registrados();
-             },
-           error: function(jqXHR,estado,error){
-             $("#btn-reg-usr").html('Hubo un error: '+estado+' '+error);
-             alert("Hubo un error al registrar el usuario, contacte a soporte inmediatamente...!");
-           }
-           });
-           }
+            });
+   })
 }
-/***********************************************************************************/
-function pone_users_registrados(pagina){
-	 var con_datos={
-			   action:'ajax',
-			   page:pagina
-			   
-			  };
-	 
-	 var q= $("#q").val();
-	 
-   $.ajax({
-          beforeSend: function(){
-            $("#users_registrados").html("<img src='view/images/ajax-loader.gif'></img>");
-           },
-          url: 'index.php?controller=Usuarios&action=index10&q='+q,
-          type: 'POST',
-          async: true,
-          data: con_datos,
-          success: function(x){
-        	  $("#nuevo_usuario").html('');
-             $("#users_registrados").html(x);
-             },
-           error: function(jqXHR,estado,error){
-             $("#users_registrados").html('Hubo un error: '+estado+' '+error);
-             alert("Hubo un error al consultar usuarios registrados, contacte a soporte inmediatamente...!");
-           }
-           });
-}
-/*******************************************************************************/
 
 
-
-
-function nuevo_usr(){
-	 var con_datos={
-			   nuevo:'nuevo',
-			  };
-	 
-	 
-  $.ajax({
-         beforeSend: function(){
-        	
+/********************************************************************/
+function NuevoUsuario(){
+	 $(document).ready(function(){
+	  
+		 var regex = /[\w-\.]{2,}@([\w-]{2,}\.)*([\w-]{2,}\.)[\w-]{2,4}/;
+    	  var errores='';
+    	  
+    	  if($("#nombre_usuario").val()==""){
+    		  
+    		  var n = noty({
+                  text: "Ingrese un Nombre!..",
+                  theme: 'relax',
+                  layout: 'center',
+                  type: 'error',
+                  timeout: 2000,
+                 });
+    		  
+    		  errores = 'true';
+    		  return false;
+    	  }else{
+    		  
+    		  errores = 'false';
+    		  
+    	  }
+    	  
+         if($("#usuario_usuario").val()==""){
+    		  
+    		  var n = noty({
+                  text: "Ingrese un Usuario!..",
+                  theme: 'relax',
+                  layout: 'center',
+                  type: 'error',
+                  timeout: 2000,
+                 });
+    		  
+    		  errores = 'true';
+    		  return false;
+    	  }else{
+    		  
+    		  errores = 'false';
+    		  
+    	  }
+    	  
+         if($("#clave_usuario").val()==""){
+   		  
+   		  var n = noty({
+                 text: "Ingrese una Clave!..",
+                 theme: 'relax',
+                 layout: 'center',
+                 type: 'error',
+                 timeout: 2000,
+                });
+   		  
+   		  errores = 'true';
+   		  return false;
+   	  }else{
+   		  
+   		  errores = 'false';
+   		  
+   	  }
          
-          },
-         url: 'index.php?controller=Usuarios&action=index11',
-         type: 'POST',
-         async: true,
-         data: con_datos,
-         success: function(x){
-        	  $("#users_registrados").html('');
-            $("#nuevo_usuario").html(x);
-            },
-          error: function(jqXHR,estado,error){
-            $("#nuevo_usuario").html('Hubo un error: '+estado+' '+error);
-            alert("Hubo un error al solicitar nueveo usuario");
-          }
-          });
+         
+         if($("#clave_usuario_r").val()==""){
+      		  
+      		  var n = noty({
+                    text: "Confirme Clave!..",
+                    theme: 'relax',
+                    layout: 'center',
+                    type: 'error',
+                    timeout: 2000,
+                   });
+      		  
+      		  errores = 'true';
+      		  return false;
+      	  }else{
+      		  
+      		  errores = 'false';
+      		  
+      	  } 
+         
+         
+    	  
+         
+         if($("#clave_usuario").val() != $("#clave_usuario_r").val()){
+        	 
+        	 var n = noty({
+                 text: "Claves no son iguales!..",
+                 theme: 'relax',
+                 layout: 'center',
+                 type: 'error',
+                 timeout: 2000,
+                });
+   		  
+   		  errores = 'true';
+   		  return false;
+   		  
+         }else{
+     		  
+     		  errores = 'false';
+     		  
+     	  } 
+    	  
+    	   
+ 		
+	    	if ($("#correo_usuario").val() == "")
+	    	{
+		    	
+	    		 var n = noty({
+	                 text: "Ingrese un correo!..",
+	                 theme: 'relax',
+	                 layout: 'center',
+	                 type: 'error',
+	                 timeout: 2000,
+	                });
+	   		  
+	   		  errores = 'true';
+	          return false;
+		    }
+	    	else if (regex.test($('#correo_usuario').val().trim()))
+	    	{
+	    		 errores = 'false';
+	            
+			}
+	    	else 
+	    	{
+	    		 var n = noty({
+	                 text: "Ingrese un correo valido!..",
+	                 theme: 'relax',
+	                 layout: 'center',
+	                 type: 'error',
+	                 timeout: 2000,
+	                });
+	   		  
+	   		  errores = 'true';
+	          return false;
+		    }
+	    	
+	    	
+	        if($("#id_rol").val() == ""){
+	        	 
+	        	 var n = noty({
+	                 text: "Seleccione un Rol!..",
+	                 theme: 'relax',
+	                 layout: 'center',
+	                 type: 'error',
+	                 timeout: 2000,
+	                });
+	   		  
+	   		  errores = 'true';
+	   		  return false;
+	   		  
+	         }else{
+	     		  
+	     		  errores = 'false';
+	     		  
+	     	  } 
+	        
+	        if($("#id_estado").val() == ""){
+	        	 
+	        	 var n = noty({
+	                 text: "Seleccione un Estado!..",
+	                 theme: 'relax',
+	                 layout: 'center',
+	                 type: 'error',
+	                 timeout: 2000,
+	                });
+	   		  
+	   		  errores = 'true';
+	   		  return false;
+	   		  
+	         }else{
+	     		  
+	     		  errores = 'false';
+	     		  
+	     	  } 
+         
+         
+    	  if(errores =='false'){
+    		 
+    		 
+    		  
+    		  
+    	    	var inf_nombre_usuario=$("#nombre_usuario").val();
+    	  	    var inf_clave_usuario=$("#clave_usuario").val();
+    	  	    var inf_telefono_usuario=$("#telefono_usuario").val();
+    	  	    var inf_celular_usuario=$("#celular_usuario").val();
+    	  	    var inf_correo_usuario=$("#correo_usuario").val();
+    	  	    var inf_id_rol=$("#id_rol").val();
+    	  	    var inf_id_estado=$("#id_estado").val();
+    	  	    var inf_usuario_usuario=$("#usuario_usuario").val();    
+    	    
+    		    var con_datos={
+    				  nombre_usuario:inf_nombre_usuario,
+    				  clave_usuario:inf_clave_usuario,
+    				  telefono_usuario:inf_telefono_usuario,
+    				  celular_usuario:inf_celular_usuario,
+    				  correo_usuario:inf_correo_usuario,
+    				  id_rol:inf_id_rol,
+    				  id_estado:inf_id_estado,
+    				  usuario_usuario:inf_usuario_usuario
+    				 
+    				  };
+    	    
+    	    
+    	    
+    	      $.ajax({
+    	        beforeSend: function(){},
+    	        url: 'index.php?controller=Usuarios&action=InsertaUsuarios',
+    	        type: 'POST',
+    	        data: con_datos,
+    	        success: function(x){
+    	          if(x==1){
+    	           lista_usuarios();
+    	           var n = noty({
+    	               text: "El Usuario se registro correctamente....",
+    	               theme: 'relax',
+    	               layout: 'center',
+    	               type: 'information',
+    	               timeout: 3000,
+    	               });
+    	           $("#btn-nuevo").prop('disabled', false);  
+    	           tabpagina('listado');
+    	           CancelaNuevoUsuario();
+    	           }
+    	           if(x=="error"){
+    	           var n = noty({
+    	           text: "No se registro el Usuario, verifique los campos...!",
+    	           theme: 'relax',
+    	           layout: 'center',
+    	           type: 'information',
+    	           timeout: 3000,
+    	           });
+    	           $("#btn-nuevo").prop('disabled', false);
+    	           
+    	          }
+    	          }
+    	          ,
+    	          /**************************/
+    	        error: function(jqXHR,estado,error){
+    	          var n = noty({
+    	           text: "Ocurrio un error al registrar el Rol!",
+    	           theme: 'relax',
+    	           layout: 'center',
+    	           type: 'information',
+    	           });
+    	          }
+    	       });
+    		  
+    	  }
+    	  
+    	  
+    
+	  });
+   }
+/*******************************************************************************************/
+function CancelaNuevoUsuario(){
+    
+    $("#nombre_usuario").val("");
+    $("#nombre_usuario").focus();
+    $("#clave_usuario").val("");
+    $("#telefono_usuario").val("");
+    $("#celular_usuario").val("");
+    $("#correo_usuario").val("");
+    $("#id_rol").val("");
+    $("#id_estado").val("");
+    $("#usuario_usuario").val("");
+   
 }
+
+/************************************************************************************/
+function tabpagina(pagetab){
+	
+	$('#myTabs a[href="#'+pagetab+'"]').tab('show'); 
+}
+/************************************************************************************/

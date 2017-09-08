@@ -152,6 +152,8 @@
 				  action:'ajax',
 				  page:pagina
 				  };
+
+		  
 		$("#DocumentosNumeroCred").fadeIn('slow');
 		$.ajax({
 			url:"<?php echo $helper->url("DocumentosNumeroCredito","buscar");?>",

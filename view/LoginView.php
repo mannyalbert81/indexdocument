@@ -5,7 +5,10 @@
       <title>Login aDocument 2015</title>
       
       <?php include 'view/modulos/links.php';?>
-      
+	  <script src="view/css/jquery.js"></script>
+	  <script src="view/css/bootstrapValidator.min.js"></script>
+	  <script src="view/css/noty.js"></script>
+	  <script src="view/css/ValidarLogin.js"></script>
 	  
 	  <style>
 	  		.login{
@@ -29,11 +32,7 @@
 
              }
              
-           
-             
-			
-
-	  		
+        	
 	  </style>
 	 </head>
    
