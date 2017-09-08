@@ -6,7 +6,52 @@ class PermisosRolesController extends ControladorBase{
 		parent::__construct();
 	}
 
-
+	public function index12(){
+	
+		session_start();
+		 
+		$i=0;
+		$permisos_rol = new PermisosRolesModel();
+		$columnas = "permisos_rol.id_permisos_rol, rol.nombre_rol, permisos_rol.nombre_permisos_rol, controladores.nombre_controladores, permisos_rol.ver_permisos_rol, permisos_rol.editar_permisos_rol, permisos_rol.borrar_permisos_rol  ";
+		$tablas   = "public.controladores,  public.permisos_rol, public.rol";
+		$where    = " controladores.id_controladores = permisos_rol.id_controladores AND permisos_rol.id_rol = rol.id_rol";
+		$id       = " permisos_rol.id_permisos_rol";
+		
+			
+		$resultSet = $permisos_rol->getCondiciones($columnas ,$tablas ,$where, $id);
+	
+		$i=count($resultSet);
+	
+		$html="";
+		if($i>0)
+		{
+	
+			$html .= "<div class='col-lg-3 col-xs-6'>";
+			$html .= "<div class='small-box bg-red'>";
+			$html .= "<div class='inner'>";
+			$html .= "<h3>$i</h3>";
+			$html .= "<p>Permisos Registrados.</p>";
+			$html .= "</div>";
+	
+	
+			$html .= "<div class='icon'>";
+			$html .= "<i class='ion ion-stats-bars'></i>";
+			$html .= "</div>";
+			$html .= "<a href='index.php?controller=PermisosRoles&action=index' class='small-box-footer'>Operaciones con permisos <i class='fa fa-arrow-circle-right'></i></a>";
+			$html .= "</div>";
+			$html .= "</div>";
+	
+	
+		}else{
+			 
+			$html = "<b>Actualmente no hay permisos registrados...</b>";
+		}
+	
+		echo $html;
+		die();
+	
+	
+	}
 	
 	public function lista_permisos(){
 		 

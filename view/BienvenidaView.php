@@ -4,7 +4,7 @@
      <title>Bienvenido - aDocument 2015</title>
       <?php include("view/modulos/links.php"); ?>
     </head>
-    <body  style="background-color: #F6FADE;"  onload="revisa_compras();">
+    <body  style="background-color: #F6FADE;"  onload="pone_users(); pone_roles(); pone_permisos_roles();">
      <div class="wrapper">
 
       <!-- Main Header -->
@@ -23,7 +23,7 @@
         <?php
         include('view/modulos/slide.php');
         
-        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","S�bado");
+        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         $fecha=$dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y') ;
         
@@ -50,10 +50,10 @@
         <!-- Main content -->
         <section class="content">
           <div class='row'>
-          <div id='pone_compras'></div>
-          <div id='pone_ventas'></div>
-          <div id='pone_gastos'></div>
           <div id='pone_users'></div>
+          <div id='pone_roles'></div>
+          <div id='pone_permisos_roles'></div>
+          
           <div class='col-md-6'>
           <!-- solid sales graph -->
               <div class="box box-solid">

@@ -5,7 +5,59 @@ class UsuariosController extends ControladorBase{
         parent::__construct();
     }
   
+ 
+    public function index12(){
+    	 
+    	session_start();
+    	
+    	$i=0;
+    	$usuarios = new UsuariosModel();
+    	$columnas = "usuarios.clave_usuario, usuarios.id_usuario,  usuarios.nombre_usuario, usuarios.usuario_usuario ,  usuarios.telefono_usuario, usuarios.celular_usuario, usuarios.correo_usuario, rol.nombre_rol, estado.nombre_estado, rol.id_rol, estado.id_estado ";
+    	$tablas   = "public.rol,  public.usuarios, public.estado";
+    	$where    = "rol.id_rol = usuarios.id_rol AND estado.id_estado = usuarios.id_estado";
+    	$id       = "usuarios.id_usuario";
+    	 
+    	 
+    	 
+    	$resultSet = $usuarios->getCondiciones($columnas ,$tablas ,$where, $id);
+    	 
+    	$i=count($resultSet);
+    	 
+    	$html="";
+    	if($i>0)
+    	{
     
+    		$html .= "<div class='col-lg-3 col-xs-6'>";
+    		$html .= "<div class='small-box bg-green'>";
+    		$html .= "<div class='inner'>";
+    		$html .= "<h3>$i</h3>";
+    		$html .= "<p>Usuarios Registrados.</p>";
+    		$html .= "</div>";
+    		
+    		
+    		$html .= "<div class='icon'>";
+    		$html .= "<i class='ion ion-person-add'></i>";
+    		$html .= "</div>";
+    		$html .= "<a href='index.php?controller=Usuarios&action=index' class='small-box-footer'>Operaciones con usuarios <i class='fa fa-arrow-circle-right'></i></a>";
+    		$html .= "</div>";
+    		$html .= "</div>";
+    		
+    			 
+    	}else{
+    		 
+    		$html = "<b>Actualmente no hay usuarios registrados...</b>";
+    	}
+    	 
+    	echo $html;
+    	die();
+    	 
+    	 
+    	 
+    	 
+    	 
+    	 
+    	 
+    }
    
     
     public function index10(){
