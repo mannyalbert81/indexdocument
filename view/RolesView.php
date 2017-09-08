@@ -5,7 +5,7 @@
       <?php include("view/modulos/links.php"); ?>
       <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
     </head>
-    <body  style="background-color: #F6FADE;"  onload="lista_roles(); tabMenu('nav-add');">
+    <body  style="background-color: #F6FADE;"  onload="lista_roles();">
      <div class="wrapper">
 
       <!-- Main Header -->

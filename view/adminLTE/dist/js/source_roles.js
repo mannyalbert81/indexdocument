@@ -29,7 +29,6 @@ function nuevoRol(){
         type: 'POST',
         data: {nombre_rol:nombre},
         success: function(x){
-        	console.log(x);
           $("#btn-nuevo").prop('disabled', true);
           if(x==1){
            $("#nombre_rol").prop('disabled', true);
@@ -42,7 +41,9 @@ function nuevoRol(){
                timeout: 3000,
                });
            $("#nombre_rol").prop('disabled', false);
-           $("#btn-nuevo").prop('disabled', false);           
+           $("#btn-nuevo").prop('disabled', false);  
+           tabpagina('listado');
+           cancelaNuevoRol();
            }
            if(x=="error"){
            var n = noty({
@@ -53,6 +54,7 @@ function nuevoRol(){
            timeout: 2000,
            });
            $("#btn-nuevo").prop('disabled', false);
+           
           }
           }
           ,
@@ -75,14 +77,12 @@ function cancelaNuevoRol(){
 /************************************************************************************/
 function tabMenu(elemento){
 	
-	$('.nav.nav-tabs.pull-right li').removeClass('active');
-    $('#'+elemento).addClass('active');
-    enlace = $('#'+elemento+' a:first');
-    $('#listado').tab('hide');
-    $('#nuevo').tab('show');
-    //$('#myTabs a[href="#' + enlace.attr('href') + '"]').tab('show');
-    //$(enlace.attr('href')).tab('show');
-    
-   
+	enlace = $('#'+elemento+' a:first');
+	$('#myTabs a[href="'+enlace.attr('href')+'"]').tab('show'); 
+}
+/************************************************************************************/
+function tabpagina(pagetab){
+	
+	$('#myTabs a[href="#'+pagetab+'"]').tab('show'); 
 }
 /************************************************************************************/
