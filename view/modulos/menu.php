@@ -109,9 +109,9 @@ $controladores=$_SESSION['controladores'];
 			<li><a href="index.php?controller=RegistroCartonDocumentos&action=index"><span class="glyphicon glyphicon-refresh" aria-hidden="true"> Registrar Carpeta</span> </a>
 			
 			</li>
-		    <li><a href="index.php?controller=Categorias&action=index">Categorias</a>
+		    <li><a href="index.php?controller=Categorias&action=index"> Categorias</a>
 		    </li>
-			<li><a href="index.php?controller=SubCategorias&action=index">Subcategorias</a>
+			<li><a href="index.php?controller=SubCategorias&action=index"> Subcategorias</a>
 			</li>
 		
 		  </ul>

@@ -12,12 +12,10 @@ class PermisosRolesController extends ControladorBase{
 		 
 		$i=0;
 		$permisos_rol = new PermisosRolesModel();
-		$columnas = "permisos_rol.id_permisos_rol, rol.nombre_rol, permisos_rol.nombre_permisos_rol, controladores.nombre_controladores, permisos_rol.ver_permisos_rol, permisos_rol.editar_permisos_rol, permisos_rol.borrar_permisos_rol  ";
+		$columnas = "permisos_rol.id_permisos_rol";
 		$tablas   = "public.controladores,  public.permisos_rol, public.rol";
 		$where    = " controladores.id_controladores = permisos_rol.id_controladores AND permisos_rol.id_rol = rol.id_rol";
 		$id       = " permisos_rol.id_permisos_rol";
-		
-			
 		$resultSet = $permisos_rol->getCondiciones($columnas ,$tablas ,$where, $id);
 	
 		$i=count($resultSet);

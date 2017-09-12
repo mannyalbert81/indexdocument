@@ -3,11 +3,7 @@
       <head>
         <title>Usuarios - aDocument 2015</title>
          <?php include("view/modulos/links.php"); ?>
-         
-		
-          <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
-          
-      
+           <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
       </head>
       <body onload="lista_usuarios();">
       <div class="wrapper">
@@ -34,7 +30,7 @@
          </h1>
          <ol class="breadcrumb">
          <li><a href="<?php echo $helper->url("usuarios","Loguear"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
-         <li class="active">Inicio</li>
+         <li class="active">Usuarios</li>
          </ol>
          </section>
 

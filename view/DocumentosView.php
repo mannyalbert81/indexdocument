@@ -1,69 +1,33 @@
 <!DOCTYPE HTML>
 <html lang="es">
      <head>
-     
-     <script>
-
-		if (history.forward(1)){location.replace(history.forward(1))}
-
-	</script> 
-
-<?php //require_once 'config/global.php';?> 
-<?php //echo json_encode($resultCli);?>
-     
         <meta charset="utf-8"/>
         <title>Busqueda de Documentos - aDocument 2015</title>
-   
-  		
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		   
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-		 
-		  <link rel="stylesheet" href="/resources/demos/style.css">
-		
-		<link rel="stylesheet" href="http://jqueryvalidation.org/files/demo/site-demos.css">
-        <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
-        <script src="http://jqueryvalidation.org/files/dist/additional-methods.min.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <script type="text/javascript" src="view/css/jquery-ui.js"></script>
-        
- 
+          <?php include("view/modulos/links.php"); ?>
+            <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		    
+      
  		
-		<script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
-		<script>
-		    webshims.setOptions('forms-ext', {types: 'date'});
-			webshims.polyfill('forms forms-ext');
-		</script>
- 		
+ 		 <script>
+         if (history.forward(1)){location.replace(history.forward(1))}
+         </script>
 			  
 		<script >
 		$(document).ready(function(){
 
-		    // cada vez que se cambia el valor del combo
-		    $("#categorias").change(function() {
+		     $("#categorias").change(function() {
 
-               // obtenemos el combo de subcategorias
-                var $subcategorias = $("#subcategorias");
-               // lo vaciamos
-               
-				///obtengo el id seleccionado
-				
-
+               var $subcategorias = $("#subcategorias");
                var id_categorias = $(this).val();
-
-
                $subcategorias.empty();
-
                $subcategorias.append("<option value= " +"0" +" > --TODOS--</option>");
-           
                if(id_categorias > 0)
                {
             	   var datos = {
             			   id_categorias : $(this).val()
                    };
 
-
-            	   $.post("<?php echo $helper->url("subCategorias","devuelveSubcategorias"); ?>", datos, function(resultSub) {
+                $.post("<?php echo $helper->url("subCategorias","devuelveSubcategorias"); ?>", datos, function(resultSub) {
 
             		 		$.each(resultSub, function(index, value) {
                		 	    $subcategorias.append("<option value= " +value.id_subcategorias +" >" + value.nombre_subcategorias  + "</option>");	
@@ -149,43 +113,25 @@
 	</script>
 	
 	
-	 
-	
-	
-	
- <script type="text/javascript">
-	$(document).ready(function(){
-
-		
+	<script type="text/javascript">
+		$(document).ready(function(){
 		$("#btnBuscar").click(function(){
 
 			var datafecha= $("#fecha_documento_hasta").data();
-			
-	    	if(datafecha.val==0)
+			if(datafecha.val==0)
 	    	{
-		    				
-			load_Documentos(1);
-
-
-			
+		    load_Documentos(1);
 	    	}else
 	    	{
 	    		datafecha.val=0;
 	    	}
-	    	
-
-	
 			});
-
-		load_nombre_cliente();
-	
-	});
+			load_nombre_cliente();
+	      });
 
 	
 	function load_Documentos(pagina){
 
-		
-		//iniciar variables
 		 var doc_categorias=$("#categorias").val();
 		 var doc_subcategorias=$("#subcategorias").val();
 		 var doc_ruc_cli=$("#txt_ruc_cliente_proveedor").val();
@@ -241,151 +187,13 @@
 		})
 	}
 
-	function load_nombre_cliente()
-	{
-		/*
-		
-	    var _resultCli='';<?php  //echo json_encode($resultCli); ?>
-	    var _sel_nombre_cliente_proveedor = $("#nombre_cliente_proveedor");
-	    _sel_nombre_cliente_proveedor.empty();
-	    _sel_nombre_cliente_proveedor.append("<option value= " +"0" +" > --TODOS--</option>");
-
-	    if(_resultCli.length>0)
-	    {
-		    console.log('hay datos');
-	    	 $.each(_resultCli, function(index, value) {
-
-	    		 _sel_nombre_cliente_proveedor.append("<option value= " +value.id_cliente_proveedor +" >" + value.nombre_cliente_proveedor  + "</option>");	
-	     		
-				 });
-	    }else{
-	    	console.log('no hay datos');
-		    }
-	    */
-	}
 
 	</script>
 	
-	
-     <script>
-     /*
-	$(document).ready(function(){
- 	
-	$("#txt_nombre_cliente_proveedor").autocomplete({
-		source: "<?php echo $helper->url("Documentos","AutocompleteNombreCliente"); ?>",
-		minLength: 1,
-		select: function( event, data ) 
-			{
-			 var respueta = data.item.id;
-			 var res = respueta.split(',');
-			 
-			 $("#nombre_cliente_proveedor").val(res[0]);
-			 $("#ruc_cliente_proveedor").val(res[0]);
-			 
-             $("#txt_nombre_cliente_proveedor").val(data.item.value);
-             $("#txt_ruc_cliente_proveedor").val(res[1]);
-	            //alert(data);
-			}
-	 });
-		
-	$("#txt_nombre_cliente_proveedor").focusout(function(){
-
-		if($("#txt_nombre_cliente_proveedor").val()==''||$("#txt_nombre_cliente_proveedor").val()==null)
-		{
-			 $("#nombre_cliente_proveedor").val(0);
-			 $("#ruc_cliente_proveedor").val(0);
-			 $("#txt_nombre_cliente_proveedor").val('');
-	         $("#txt_ruc_cliente_proveedor").val('');
-			 
-		}
-						
-	});
-						
-	});
-		*/
-					
-    </script>
-    
-    <script>
-    /*
-	$(document).ready(function(){
- 	
-	$("#txt_ruc_cliente_proveedor").autocomplete({
-		source: "<?php echo $helper->url("Documentos","AutocompleteRucCliente"); ?>",
-		minLength: 1,
-		select: function( event, data ) 
-		{
-		 var respueta = data.item.id;
-		 var res = respueta.split(',');
-		 
-		 $("#nombre_cliente_proveedor").val(res[0]);
-		 $("#ruc_cliente_proveedor").val(res[0]);
-		 
-         $("#txt_nombre_cliente_proveedor").val(res[1]);
-         $("#txt_ruc_cliente_proveedor").val(data.item.value);
-            //alert(data);
-		}
-	 });
-		
-	$("#txt_ruc_cliente_proveedor").focusout(function(){
-
-		if($("#txt_ruc_cliente_proveedor").val()==''||$("#txt_ruc_cliente_proveedor").val()==null)
-		{
-			 $("#nombre_cliente_proveedor").val(0);
-			 $("#ruc_cliente_proveedor").val(0);
-			 $("#txt_nombre_cliente_proveedor").val('');
-	         $("#txt_ruc_cliente_proveedor").val('');
-	            //alert(data);
-			 
-		}
-						
-	});
-	});
-		*/
-					
-    </script>
-    
-    <script>
-    /*
-	$(document).ready(function(){
- 	
-	$("#txt_tipo_documentos").autocomplete({
-		source: "<?php echo $helper->url("Documentos","AutocompleteTipoDoc"); ?>",
-		minLength: 1,
-		select: function( event, data ) 
-		{
-		 var respueta = data.item.id;
-		 $("#tipo_documentos").val(respueta);
-		 
-         $("#txt_tipo_documentos").val(data.item.value);
-		}
-	 });
-		
-	$("#txt_tipo_documentos").focusout(function(){
-
-		if($("#txt_tipo_documentos").val()==''||$("#txt_tipo_documentos").val()==null)
-		{
-			 $("#tipo_documentos").val(0);
-		}
-						
-	});
-	});
-		*/
-				
-    </script>
-      
-	  
-	  
-	 
        <script>
-
 		$(document).ready(function(){
-
 		    $("#fecha_documento_hasta").change(function() {
-
-		    	
 		    	return validarFecha();
-		    	
 			  });
 
 		    $fecha=$('#fecha_documento_hasta');
@@ -452,45 +260,9 @@
 	    	$('#fecha_documento_hasta').val("");
 	    }
 	</script>
-		
-
-   <script type="text/javascript">
-      
-/*
-      function validar(obj) {
-
-  		var startDate = new Date($('#fecha_documento_desde').val());
-	    var endDate = new Date($('#fecha_documento_hasta').val());
-	   
-	    
-		if(startDate == /^\d{2}\/\d{2}\/\d{4}$/){
-				
-			
-		}else {
-			 $("#fecha_documento_desde").val("");
-		        
-		        alert("Formato Fecha no Valido Ingrese (DD/MM/YYYY)");
-
-	     }
-		
-		if(endDate == /^\d{2}\/\d{2}\/\d{4}$/){
-			
-		}else {
-			 $("#fecha_documento_desde").val("");
-		        
-		        alert("Formato Fecha no Valido Ingrese (DD/MM/YYYY)");
-
-	     }
-      
-      }
-
-      */
-      </script>
-	
+	  	
 	<script>
-
 		$(document).ready(function(){
-
 		    $("#fecha_poliza_hasta").change(function() {
 			    
 		    	var startDate = new Date($('#fecha_poliza_desde').val());
@@ -514,15 +286,10 @@
 
 	</script>
 	
-	
 
 	<script>
-
 		$(document).ready(function(){
-
 		    $("#fecha_subida_hasta").change(function() {
-
-
 		    	var startDate = new Date($('#fecha_subida_desde').val());
 		    	var endDate = new Date($('#fecha_subida_hasta').val());
 
@@ -541,26 +308,12 @@
 		    		die();
 		    	}
 			  });
-			  
-		   
 		}); 
-
 	</script>
        
-      
-      
-      
-  
-
-
-    
-       
-       
     <script type="text/javascript">
-    $(document).ready(function(){
-
+      $(document).ready(function(){
 	    $("#fecha_subida_hasta").keypress(function() {
-
 		    alert('hola');
 
 		 if($(this).val().lenght<=10)
@@ -575,29 +328,25 @@
 	}); 
 
     </script>   
-       
-       <style>
-            input{
-                margin-top:5px;
-                margin-bottom:5px;
-            }
-            .right{
-                float:right;
-            }
-                
-            
-        </style>
-        
-        
                
     </head>
-    <body >
+    <body>
+    <div class="wrapper">
  
- 
-       <?php include("view/modulos/head.php"); ?>
+      <header class="main-header">
+        <?php include('view/modulos/head.php');?>
+      </header>
      
+      <aside class="main-sidebar">
+	  <?php include('view/modulos/slide.php');
+        
+        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $fecha=$dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y') ;
+        ?>
+      </aside>
        
-       <?php include("view/modulos/menu.php"); ?>
+     
   
         
        <?php
@@ -638,26 +387,37 @@
 		   }
 		   
 		?>
-        <div class="container">
-      <div class="row" style="background-color: #FAFAFA;">
-      
+		
+		
+		
+		
+		
+		 <div class="content-wrapper">
+         <section class="content-header">
+         <h1>
+         <?php   echo "IndexDocument";?>
+         <small><?php echo $fecha; ?></small>
+         </h1>
+         <ol class="breadcrumb">
+         <li><a href="<?php echo $helper->url("usuarios","Loguear"); ?>"><i class="fa fa-dashboard"></i> Home</a></li>
+         <li class="active">Buequeda de Documentos</li>
+         </ol>
+         </section>
+         
+         
+         <section class="content">
+          <div class='nav-tabs-custom'>
+          		<ul id="myTabs" class="nav nav-tabs pull-right">
+                  <li id="nav-listado" class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
+                  <li class="pull-left header"><i class="fa fa-file-text"></i> BUSQUEDA DE DOCUMENTOS.</li>
+                </ul>
+                
+          
+       
       <?php   $nombre_tipo_doc="";    $nombre_cliente="";      $ruc_cliente="";?>
-      
-      <form id="formularioPrincipal" action="<?php echo $helper->url("Documentos","index"); ?>" method="post" class="form-horizontal">
-        
+      <div class="tab-pane" id="listado" >
+      <form  action="<?php echo $helper->url("Documentos","index"); ?>" method="post" class="form-horizontal">
      
-      <div class="panel panel-default">
-
-		  <div class="panel-heading"> <strong style="color:#ec971f;"> BUSQUEDA DE DOCUMENTOS </strong>  </div>
-		  <div class="panel-body">
-		    <?php if ($resultEdit !="" ) { foreach($resultEdit as $resEdit) {?>
-		  	  <p   class="bg-danger" style="text-align: center;" ><strong>ESTAMOS EDITANDO </strong> Los cambios realizados seran guardados en el registro : <strong>   <?php echo $resEdit->id_documentos_legal ?>  </strong> </p>
-		  	  <input  type="hidden" id="id_documentos_legal" name="id_documentos_legal" value= "<?php echo $resEdit->id_documentos_legal ?>" > 
-  	        <?php } }?>
-  	      
-  	      </div>
-
-      <div class="table-responsive">
      
     
        	<table class="table">     	
@@ -830,10 +590,7 @@
 		   			
 		   		</td>
 		   		
-		   		
-		   		
-		         
-				 
+		   		 
 				 <td>
 		   		<?php 
 		   		if($resultEdit !="" && !empty($resultTip))
@@ -900,10 +657,6 @@
 						   -->
 		   		</td>
 		
-		
-		   			
-		   		
-		   		
 		   		<td>  	
 		        	<?php if ($resultEdit !="" ) { ?>
 		  	  			<input type="submit" value="Guardar" id="btnGuardar" name="btnGuardar" class="btn btn-success"/>
@@ -921,24 +674,15 @@
       
 
 		   		
-      	</div>
-        </div>  
+      	
       
 
-     <hr/> 
-     
-     <!-- paginacion ajax -->
+    
         
-        <div style="height: 200px; display: block;">
-		
-		 <h4 style="color:#ec971f;"></h4>
-			  <div >					
-					<div id="Documentos" style="text-align: center;	top: 55px;	width: 100%;display:none;"></div><!-- Carga gif animado -->
-					<div class="Documentos" ></div><!-- Datos ajax Final -->
-		      </div>
-		       <br>
-				  
-		 </div>
+          <div id="Documentos" style="text-align: center;display:none;"></div><!-- Carga gif animado -->
+		  <div class="Documentos"></div><!-- Datos ajax Final -->
+		 
+       
 		 
 		 
 		       <select name="numero_poliza" id="numero_poliza"  class="form-control" style="visibility:hidden" >
@@ -997,123 +741,32 @@
 						  
 						  
 						  <input type="hidden" name="fecha_subida_desde"  id="fecha_subida_desde"  class="form-control"  />
-				<input type="hidden" name="fecha_subida_hasta"  id="fecha_subida_hasta"  class="form-control"  />
+				          <input type="hidden" name="fecha_subida_hasta"  id="fecha_subida_hasta"  class="form-control"  />
 							
-		   			<input type="hidden" name="fecha_poliza_desde"  id="fecha_poliza_desde"  class="form-control"  />
-					 	<input type="hidden" name="fecha_poliza_hasta"  id="fecha_poliza_hasta"  class="form-control" hidden />
+		   			      <input type="hidden" name="fecha_poliza_desde"  id="fecha_poliza_desde"  class="form-control"  />
+					 	  <input type="hidden" name="fecha_poliza_hasta"  id="fecha_poliza_hasta"  class="form-control"  />
 					 	
 		   		
 		   		   	
         
         <!--termina paginacion ajax --> 	
-
-      <?php /*?>
-       <section class="col-sm-12" style="height:400px;overflow-y:scroll;">
+  		
+        </form>
+        </div>
+        </div>
+        </section>
+        </div>
+		
+		
+		
+        <?php include('view/modulos/footer.php'); ?>
+	    <div class="control-sidebar-bg"></div>
+	    </div>
+       
+    <div class="MsjAjaxForm"></div>
+	<?php include "view/modulos/script.php"; ?>
     
-    
-	    <table>
-		    <tr> 
-		    	<th> 
-		    	</th>
-		    </tr>
-	    </table>
-	    
-	  
-	    <table class="table">
-	         <tr>
-	    		<th>Id</th>
-	    		<th>Fecha del Documento</th>
-	    		<th>Categoria</th>
-	    		<th>Subcategoria</th>
-	    		<th>Tipo Documentos</th>
-	    		<th>Cliente/Proveedor</th>
-	    		<th>Carton Documentos</th>
-	    		<th>Numero Credito</th>
-	    		<th>Fecha de Subida</th>
-	    		<th></th>
-	    		<th></th>
-	    		
-	  		</tr>
-            <?php// echo $resul  ?>
-			<?php  $paginas =   0;  ?>
-		    <?php  $registros = 0; ?>
-	  		<?php if ($resultSet !="") { foreach($resultSet as $res) {?>
-	        		<tr>
-	                   <td> <?php echo $res->id_documentos_legal; ?>  </td>
-	                   <td> <?php echo $res->fecha_documentos_legal; ?>  </td>
-		               <td> <?php echo $res->nombre_categorias; ?>     </td> 
-		               <td> <?php echo $res->nombre_subcategorias; ?>  </td>
-		               <td> <?php echo $res->nombre_tipo_documentos; ?>     </td>
-		               <td> <?php echo $res->nombre_cliente_proveedor; ?>     </td>
-		               <td> <?php echo $res->numero_carton_documentos; ?>     </td>
-		    	       <td> <?php echo $res->numero_credito_documentos_legal; ?>     </td>
-		    	       
-		    	       <td> <?php echo $res->creado; ?>     </td>
-		            		 <?php  $paginas = $paginas + $res->paginas_documentos_legal;  ?>
-		                     <?php  $registros = $registros + 1 ; ?>
-		    
-		                 <td>
-			           		<div class="right">
-			            
-			                  <?php  if ($_SESSION["tipo_usuario"]=="usuario_local") {  ?>
-			            		 	  <a href=" <?php echo IP_INT . $res->id_documentos_legal; ?>  " class="btn btn-warning" target="blank">Ver</a>
-			            		 <?php } else {?>
-			            		 	  <a href="<?php echo IP_EXT . $res->id_documentos_legal; ?>  " class="btn btn-warning" target="blank">Ver</a> 
-			            		 <?php }?>
-			                           
-			                </div>
-			            
-			             </td>
-			             <td>
-			           		<div class="right">
-			                    <a href="<?php echo $helper->url("Documentos","index"); ?>&id_documentos_legal=<?php echo $res->id_documentos_legal; ?>" class="btn btn-info">Editar</a>
-			            
-			                </div>
-			            
-			             </td>
-			             
-		    		</tr>
-		  		
-		           	  
-		        <?php } ?>
-		</table>      		
-		    		
-		<table class="table">
-				<th class="text-center">
-				    	<nav>
-						  <ul id="pagina" name="pagina" class="pagination">
-						    <?php if ($paginasTotales > 0) {?>
-						    <?php for ($i = 1; $i< $paginasTotales+1; $i++)  { ?>
-						    		<input type="submit" value="<?php echo $i; ?>" id="pagina"  <?php if ($i == $pagina_actual ) { echo 'style="color: #1454a3 " '; }  ?>     name="pagina" class="btn btn-info"/>
-						    	
-						    <?php    } }?>
-						    
-						  </ul>
-						</nav>	   	   
-			
-				</th>
-				<tr class="bg-primary">
-						<p class="text-center"> <strong> Registros Cargados: <?php echo  $registros?> Hojas Cargadas: <?php echo $paginas?> Registros Totales: <?php echo  $registrosTotales?> Hojas Totales: <?php echo $hojasTotales?> </strong>  </p>
-	     		  	
-				</tr>			
-		</table>
-		 	
- 				<?php  }   else { ?>
-		        <?php }  ?>
-      </section>       
-    <?php */?>
-      
-       </form>
-       <br>
-       <br>
-       <br>
-      
-       </div>
-       </div>
-        <br>
-       <br>
-        <footer class="col-lg-12">
-           <?php include("view/modulos/footer.php"); ?>
-        </footer>
-       </body>  
+   
+ 	  
+    </body>  
     </html>

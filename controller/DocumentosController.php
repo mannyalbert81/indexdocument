@@ -1691,14 +1691,17 @@ class DocumentosController extends ControladorBase{
 						if ($cantidadResult>0)
 						{
 	
+							$html .= '<div class="box box-primary">';
+							$html .= '<div class="box-header">';
 							$html.='<div class="pull-left">';
 							$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
 							$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
-							$html.='</div><br>';
-							$html.='<section style="height:700px;  overflow-y:auto;">';
-							$html.='<table class="table table-hover">';
+							$html .= '</div>';
+							$html.='</div>';
+							$html.= '<div class="box-body">';
+							$html.='<table class="table table-hover table-condensed">';
 							$html.='<thead>';
-							$html.='<tr class="info">';
+							$html.='<tr>';
 							$html.='<th style="text-align: left;  font-size: 10px;">Id</th>';
 							$html.='<th style="text-align: left;  font-size: 10px;">Fecha</th>';
 							$html.='<th style="text-align: left;  font-size: 10px;">Subcategoría</th>';
@@ -1750,11 +1753,12 @@ class DocumentosController extends ControladorBase{
 								
 							$html.='</tbody>';
 							$html.='</table>';
-							$html.='</section>';
+							$html .= '</div>';
+							$html .= '</div>';
 							$html.='<div class="table-pagination pull-right">';
 							$html.=''. $this->paginate("index.php", $page, $total_pages, $adjacents).'';
 							$html.='</div>';
-							$html.='</section>';
+							
 							
 							}else{
 							

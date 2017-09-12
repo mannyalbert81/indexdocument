@@ -10,7 +10,7 @@ function lista_roles(){
                success: function(x){
                  $("#listaRoles").html(x);
                  $("#tabla_roles").dataTable({
-                     'lengthMenu': [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+                     'lengthMenu': [[5,10, 25, 50, -1], [5,10, 25, 50, "Todos"]],
                      'columnDefs': [ {
                     	 sTitle: 'Accion',
                          mDataProp: '1',
@@ -32,7 +32,7 @@ function lista_roles(){
                  } );
                },
               error: function(jqXHR,estado,error){
-                $("#listaRoles").html("Ocurrio un error al cargar la informacion de compras..."+estado+"    "+error);
+                $("#listaRoles").html("Ocurrio un error al cargar la informacion de roles..."+estado+"    "+error);
               }
             });
      

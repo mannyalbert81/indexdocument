@@ -12,7 +12,7 @@ class UsuariosController extends ControladorBase{
     	
     	$i=0;
     	$usuarios = new UsuariosModel();
-    	$columnas = "usuarios.clave_usuario, usuarios.id_usuario,  usuarios.nombre_usuario, usuarios.usuario_usuario ,  usuarios.telefono_usuario, usuarios.celular_usuario, usuarios.correo_usuario, rol.nombre_rol, estado.nombre_estado, rol.id_rol, estado.id_estado ";
+    	$columnas = "usuarios.id_usuario";
     	$tablas   = "public.rol,  public.usuarios, public.estado";
     	$where    = "rol.id_rol = usuarios.id_rol AND estado.id_estado = usuarios.id_estado";
     	$id       = "usuarios.id_usuario";
@@ -264,13 +264,10 @@ class UsuariosController extends ControladorBase{
     	
     	
     	if (isset ($_POST["usuario"]) && ($_POST["clave"] ) )
-    	
     	{
     		$usuarios=new UsuariosModel();
     		$_usuario = $_POST["usuario"];
     		$_clave =   $_POST["clave"];
-    		
-    		
     		
     		
     		$where = "  usuario_usuario = '$_usuario' AND  clave_usuario ='$_clave' ";

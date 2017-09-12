@@ -12,7 +12,7 @@ class RolesController extends ControladorBase{
 			
 		$i=0;
 		$roles=new RolesModel();
-		$columnas = " id_rol, nombre_rol ";
+		$columnas = " id_rol";
 		$tablas   = "rol";
 		$where    = "id_rol >0 ";
 		$id       = "id_rol";
@@ -270,7 +270,7 @@ class RolesController extends ControladorBase{
 					$html .= "<table id='tabla_roles' class='table table-hover table-condensed'>";
 					$html .= "<thead>";
 					$html .= "<tr>";
-					$html .= "<th></th><th>Codigo</th><th>Descripcion Rol</th>";
+					$html .= "<th></th><th style='text-align: left;  font-size: 14px;'>Codigo</th><th style='text-align: left;  font-size: 14px;'>Descripcion Rol</th>";
 					$html .= "</tr>";
 					$html .= "</thead>";
 					$html .= "<tbody>";
@@ -279,9 +279,8 @@ class RolesController extends ControladorBase{
 					{
 					
 						$html .= "<tr><td></td>";
-						$html .= "<td style='text-align: center;'>".$res->id_rol."</td>";
-						$html .= "<td style='text-align: center;'>".strtoupper($res->nombre_rol)."</td>";
-						
+						$html .= "<td style='font-size: 13px;'>".$res->id_rol."</td>";
+						$html .= "<td style='font-size: 13px;'>".$res->nombre_rol."</td>";
 						$html .= "</tr>";
 					}
 					$html .= "</tbody>";
@@ -289,7 +288,7 @@ class RolesController extends ControladorBase{
 					$html .= "</div>";
 					$html .= "</div>";
 				}else{
-					$html = "<b>Actualmente no hay articulos registrados...</b>";
+					$html = "<b>Actualmente no hay roles registrados...</b>";
 				}
 			}
 			else

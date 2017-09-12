@@ -61,7 +61,7 @@
                   <li id="nav-add"><a href="#nuevo" data-toggle="tab">Agregar</a></li>
                   <li id="nav-listado" class="active"><a href="#listado" data-toggle="tab">Listado</a></li>
 
-                  <li class="pull-left header"><i class="fa fa-file-text"></i> Roles Usuarios.</li>
+                  <li class="pull-left header"><i class="fa fa-file-text"></i> Panel Roles de Usuarios.</li>
                 </ul>
                <div class="tab-content">
                   <div class="tab-pane active" id="listado">
@@ -71,7 +71,6 @@
 
                   <div class="tab-pane" id="nuevo">
                     <form class="form-horizontal" id="frmAgregar">
-
                     <div class='form-group'>
                     <label for="nombre_rol" class="col-sm-2 control-label">Nombre Rol::</label>
                     <div class="col-sm-3">
