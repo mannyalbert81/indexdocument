@@ -20,6 +20,8 @@
             }
             .right{
                 float:right;
+                
+                
             }
                 
             
