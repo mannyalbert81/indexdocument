@@ -8,8 +8,7 @@ class DocumentosController extends ControladorBase{
 
 
 
-	public function index(){
-
+public function index(){
 		session_start();
 		
 		$documentos_legal = new DocumentosLegalModel();
@@ -22,18 +21,358 @@ class DocumentosController extends ControladorBase{
 				
 			if (!empty($resultPer))
 			{
+			
+				$registrosTotales = 0;
+				$hojasTotales = 0;
+					
+					// Categorias
 				$categorias=new CategoriasModel();
 				$resultCat=$categorias->getAll("nombre_categorias");
+				
 				
 				$subcategorias=new SubCategoriasModel();
 				$resultSub=$subcategorias->getAll("nombre_subcategorias");
 				
-				$this->view("Documentos",array(
-						"resultCat"=>$resultCat, "resultSub"=>$resultSub	
+				//cliente_proveedor
+				$cliente_proveedor=new ClienteProveedorModel();
+				$columnas_cp = " cliente_proveedor.id_cliente_proveedor,  cliente_proveedor.ruc_cliente_proveedor,  cliente_proveedor.nombre_cliente_proveedor";
+				$tablas_cp   = "   public.cliente_proveedor, public.documentos_legal";
+				$where_cp  = " cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor GROUP BY  cliente_proveedor.ruc_cliente_proveedor, cliente_proveedor.nombre_cliente_proveedor ,cliente_proveedor.id_cliente_proveedor";
+				$id_cp = " cliente_proveedor.nombre_cliente_proveedor";
+				$resultCli=$cliente_proveedor->getCondiciones($columnas_cp, $tablas_cp, $where_cp, $id_cp);;
+				
+				//Tipo de Documento
+				$tipo_documentos=new TipoDocumentosModel();
+				$columnas_td = "  tipo_documentos.nombre_tipo_documentos, tipo_documentos.id_tipo_documentos";
+				$tablas_td   = " public.documentos_legal, public.tipo_documentos";
+				$where_td  = " documentos_legal.id_tipo_documentos = tipo_documentos.id_tipo_documentos GROUP BY tipo_documentos.nombre_tipo_documentos, tipo_documentos.id_tipo_documentos";
+				$id_td = " tipo_documentos.nombre_tipo_documentos";
+				$resultTip=$tipo_documentos->getCondiciones($columnas_td, $tablas_td, $where_td, $id_td);;
+				
+				//Carton Documento
+				$carton_documentos=new CartonDocumentosModel();
+				$columnas_cd = " carton_documentos.id_carton_documentos, carton_documentos.numero_carton_documentos";
+				$tablas_cd   = " public.carton_documentos, public.documentos_legal";
+				$where_cd  = "carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos GROUP BY carton_documentos.id_carton_documentos, carton_documentos.numero_carton_documentos";
+				$id_cd = " carton_documentos.numero_carton_documentos";
+				$resultCar=$carton_documentos->getCondiciones($columnas_cd, $tablas_cd, $where_cd, $id_cd);;
+				
+				
+				//SOAT
+				$soat=new SoatModel();
+				$columnas_so = " id_soat, cierre_ventas_soat";
+				$tablas_so   = " soat";
+				$where_so  = " id_soat > 0";
+				$id_so = "cierre_ventas_soat";
+				$resultSoa= "";
+				//$resultSoa=$soat->getCondiciones($columnas_so, $tablas_so, $where_so, $id_so);;
+				
+				
+		         
+				//documentos Legl
+				
+				//$resultPol = $documentos_legal->getCondiciones("numero_poliza_documentos_legal", "documentos_legal", "numero_poliza_documentos_legal !='' GROUP BY numero_poliza_documentos_legal", "numero_poliza_documentos_legal");
+				$resultPol = "";
+				
+				$resultEdit = "";
+				$resul = "";
+		
+				if (isset ($_GET["id_documentos_legal"])   )
+				{
+					$nombre_controladores = "Documentos";
+					$id_rol= $_SESSION['id_rol'];
+					$resultPer = $documentos_legal->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+					
+					if (!empty($resultPer))
+					{
+						$_id_documentos_legal = $_GET["id_documentos_legal"];
+						$resultEdit = $documentos_legal->getBy("id_documentos_legal = '$_id_documentos_legal'     ");
 						
-				));
+					}
+					else
+					{
+						$this->view("Error",array(
+								"resultado"=>"No tiene Permisos de Editar a Documentos"
+					
+						));
+					
+						exit();
+					}
+						
+				}
+		
+				
+					
+				
+				
+				
+				if (isset ($_POST["categorias"]) && isset ($_POST["subcategorias"]) && isset($_POST["ruc_cliente_proveedor"]) && isset($_POST["nombre_cliente_proveedor"]) && isset($_POST["tipo_documentos"]) && isset($_POST["carton_documentos"])   && isset($_POST["fecha_documento_desde"]) && isset($_POST["fecha_documento_hasta"])  && isset($_POST["fecha_subida_desde"])  && isset($_POST["fecha_subida_hasta"])   )
+				
+				{
+					
+					///creo el array con los valores seleccionados
+		
+					
+					$arraySel = "";
+				    $columnas = "documentos_legal.id_documentos_legal,  documentos_legal.fecha_documentos_legal, categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos, cliente_proveedor.nombre_cliente_proveedor, carton_documentos.numero_carton_documentos, documentos_legal.paginas_documentos_legal, documentos_legal.fecha_desde_documentos_legal, documentos_legal.fecha_hasta_documentos_legal, documentos_legal.ramo_documentos_legal, documentos_legal.numero_poliza_documentos_legal, documentos_legal.ciudad_emision_documentos_legal, soat.cierre_ventas_soat,   documentos_legal.creado, documentos_legal.numero_credito_documentos_legal, referencia.nombre_referencia , tipo_comprobantes.nombre_tipo_comprobantes, comprobantes.numero_comprobantes , detalle_documentos.nombre_detalle_documentos, regionales.nombre_regionales, sucursales.nombre_sucursales  "; 
+					$tablas   = "public.documentos_legal, public.categorias, public.subcategorias, public.tipo_documentos, public.carton_documentos, public.cliente_proveedor, public.soat, public.referencia, public.tipo_comprobantes , public.comprobantes, public.detalle_documentos, public.sucursales, public.agencias, public.regionales";
+					$where    = "categorias.id_categorias = subcategorias.id_categorias AND subcategorias.id_subcategorias = documentos_legal.id_subcategorias AND tipo_documentos.id_tipo_documentos = documentos_legal.id_tipo_documentos AND carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos AND cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor   AND documentos_legal.id_soat = soat.id_soat  AND documentos_legal.id_referencia = referencia.id_referencia AND documentos_legal.id_tipo_comprobantes = tipo_comprobantes.id_tipo_comprobantes AND documentos_legal.id_comprobantes = comprobantes.id_comprobantes AND documentos_legal.id_detalle_comprobantes = detalle_documentos.id_detalle_documentos AND documentos_legal.id_regionales = regionales.id_regionales AND documentos_legal.id_sucursales = sucursales.id_sucursales AND documentos_legal.id_agencias = agencias.id_agencias ";
+					$id       = "documentos_legal.fecha_documentos_legal, carton_documentos.numero_carton_documentos";
+									
+					
+					$documentos = new DocumentosLegalModel();
+					$where_1 = "";
+					$where_2 = "";
+					$where_3 = "";
+					$where_4 = "";
+					$where_5 = "";
+					$where_6 = "";
+					$where_7 = "";
+					$where_8 = "";
+					$where_9 = "";
+					$where_10 = "";
+					$where_11 = "";
+					$where_12 = "";
+					$where_13 = "";
+						
+					
+					
+					$_id_categorias = $_POST["categorias"];
+					$_id_subcategorias = $_POST["subcategorias"];
+					$_id_cliente_proveedor = $_POST["ruc_cliente_proveedor"];
+					$_id_tipo_documentos = $_POST["tipo_documentos"];
+					$_id_carton_documentos = $_POST["carton_documentos"];
+					$_numero_poliza  = $_POST["numero_poliza"];
+					$_id_soat  = $_POST["cierre_ventas_soat"];
+					$_year     = 	$_POST["year"];
+					
+					$_fecha_documento_desde = $_POST["fecha_documento_desde"];
+					$_fecha_documento_hasta = $_POST["fecha_documento_hasta"];
+					$_fecha_subida_desde = $_POST["fecha_subida_desde"];
+					$_fecha_subida_hasta = $_POST["fecha_subida_hasta"];
+					$_fecha_poliza_desde = $_POST["fecha_poliza_desde"];
+					$_fecha_poliza_hasta = $_POST["fecha_poliza_hasta"];
+						
+		        	if ($_id_categorias > 0)
+					{
+		
+						$where_1 =  " AND categorias.id_categorias = '$_id_categorias' ";
+						
+					}
+					
+					if ($_id_subcategorias > 0)
+					{
+					
+						$where_2 = " AND subcategorias.id_subcategorias = '$_id_subcategorias' ";
+					
+					}
+					if ($_id_cliente_proveedor > 0)
+					{
+						
+						$where_4 = " AND cliente_proveedor.id_cliente_proveedor = '$_id_cliente_proveedor' ";
+					}	
+					if ($_id_tipo_documentos > 0)
+					{
+					
+						$where_5 = " AND tipo_documentos.id_tipo_documentos = '$_id_tipo_documentos' ";
+					}
+					if ($_id_carton_documentos > 0)
+					{
+							
+						$where_6 = " AND carton_documentos.id_carton_documentos = '$_id_carton_documentos' ";
+					}
+					
+					if ($_numero_poliza > 0)
+					{
+						$where_7 = " AND documentos_legal.numero_poliza_documentos_legal = '$_numero_poliza' ";
+					}
+					
+					if ($_fecha_documento_desde != "" && $_fecha_documento_hasta != "")
+					{
+						$where_8 = " AND documentos_legal.fecha_documentos_legal BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
+					}
+		
+					if ($_fecha_subida_desde != "" && $_fecha_subida_hasta != "")
+					{
+						$where_9 = " AND documentos_legal.creado BETWEEN '$_fecha_subida_desde' AND '$_fecha_subida_hasta'  ";
+					}
+					
+					if ($_fecha_poliza_desde != "" && $_fecha_poliza_hasta != "")
+					{
+						$where_10 = " AND documentos_legal.fecha_desde_documentos_legal > '$_fecha_poliza_desde' AND documentos_legal.fecha_desde_documentos_legal < '$_fecha_poliza_hasta'  ";
+					}
+					if ($_id_soat > 0)
+					{
+							
+						$where_12 = "  AND soat.id_soat = '$_id_soat' ";
+					}
+					$resul = $_year;
+					if ($_year > 0)
+					{
+						$fecha_desde = $_year ."-01-01";
+						$fecha_hasta = $_year ."-12-31";
+						$where_13 = "  AND documentos_legal.fecha_documentos_legal BETWEEN '$fecha_desde' AND  '$fecha_hasta'  "  ;
+										
+					}
+						
+		
+					$where_to  = $where . $where_1 . $where_2 . $where_3 . $where_4 . $where_5 . $where_6 . $where_7 . $where_8 . $where_9 . $where_10. $where_11. $where_12. $where_13;
+					
+					//Conseguimos todos los usuarios
+					
+					//$resul = $where_to;
+					$resultSet=$documentos->getCondiciones($columnas ,$tablas ,$where_to, $id);
+					
+					foreach($resultSet as $res) 
+					{
+						$hojasTotales =  $hojasTotales + $res->paginas_documentos_legal;
+						$registrosTotales = $registrosTotales + 1 ;
+					}
+					
+			}
+			else 
+			{
+			//$arraySel = array();
+				$registrosTotales = 0;
+				$hojasTotales = 0;
+					
 			
-
+			$arraySel = "";
+			$resultSet = "";
+			}
+		
+		
+			///aqui va la paginacion  ///
+			$articulosTotales = 0;
+			$paginasTotales = 0;
+			$paginaActual = 0;
+			
+			if(isset($_POST["pagina"])){
+				
+				// en caso que haya datos, los casteamos a int
+				$paginaActual = (int)$_POST["pagina"];
+			}
+				
+			
+			if ($resultSet != "")
+			{
+					
+					foreach($resultSet as $res)
+					{
+						$articulosTotales = $articulosTotales + 1;
+					}
+						
+						
+					$articulosPorPagina = 50;
+						
+					$paginasTotales = ceil($articulosTotales / $articulosPorPagina);
+				
+						
+					// el número de la página actual no puede ser menor a 0
+					if($paginaActual < 1){
+						$paginaActual = 1;
+					}
+					else if($paginaActual > $paginasTotales){ // tampoco mayor la cantidad de páginas totales
+						$paginaActual = $paginasTotales;
+					}
+						
+					// obtenemos cuál es el artículo inicial para la consulta
+					$articuloInicial = ($paginaActual - 1) * $articulosPorPagina;
+						
+					//agregamos el limit
+					$limit = " LIMIT   '$articulosPorPagina' OFFSET '$articuloInicial'";
+						
+					//volvemos a pedir el resultset con la pginacion
+						
+					$resultSet=$documentos->getCondicionesPag($columnas ,$tablas ,$where_to,  $id, $limit );
+						
+					
+			
+			}
+			
+			if (isset ($_POST["btnGuardar"])  && isset ($_POST["id_documentos_legal"]) )
+			{
+			
+				$nombre_controladores = "Documentos";
+				$id_rol= $_SESSION['id_rol'];
+				$resultPer = $documentos_legal->getPermisosEditar("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+					
+				if (!empty($resultPer))
+				{
+						
+				
+						$resul = "";
+						
+						
+						$columnas = "documentos_legal.id_documentos_legal, documentos_legal.fecha_documentos_legal, categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos, cliente_proveedor.nombre_cliente_proveedor, carton_documentos.numero_carton_documentos, documentos_legal.paginas_documentos_legal, documentos_legal.fecha_desde_documentos_legal, documentos_legal.fecha_hasta_documentos_legal, documentos_legal.ramo_documentos_legal, documentos_legal.numero_poliza_documentos_legal, documentos_legal.ciudad_emision_documentos_legal, documentos_legal.creado  ";
+						$tablas   = "public.documentos_legal, public.categorias, public.subcategorias, public.tipo_documentos, public.carton_documentos, public.cliente_proveedor";
+						$where    = "categorias.id_categorias = subcategorias.id_categorias AND subcategorias.id_subcategorias = documentos_legal.id_subcategorias AND tipo_documentos.id_tipo_documentos = documentos_legal.id_tipo_documentos AND carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos AND cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor ";
+						$id       = "categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos";
+						
+			
+						$_id_categorias = $_POST["categorias"];
+						$_id_subcategorias = $_POST["subcategorias"];
+						$_id_cliente_proveedor = $_POST["ruc_cliente_proveedor"];
+						$_id_tipo_documentos = $_POST["tipo_documentos"];
+						$_id_carton_documentos = $_POST["carton_documentos"];
+						$_numero_poliza  = $_POST["numero_poliza"];
+						$_id_soat  = $_POST["cierre_ventas_soat"];
+						$_fecha_documento_desde = $_POST["fecha_documento_desde"];
+						$_fecha_documento_hasta = $_POST["fecha_documento_hasta"];
+						$_fecha_subida_desde = $_POST["fecha_subida_desde"];
+						$_fecha_subida_hasta = $_POST["fecha_subida_hasta"];
+						$_fecha_poliza_desde = $_POST["fecha_poliza_desde"];
+						$_fecha_poliza_hasta = $_POST["fecha_poliza_hasta"];
+							
+						if ($_numero_poliza == 0)
+						{
+							$_numero_poliza = null;
+							
+						}
+						
+					
+						$_id_documentos_legal = $_POST["id_documentos_legal"];
+					
+					
+						
+							
+						////guardamos en caso de que esten todos seleccionados
+						if ( $_id_categorias > 0 &&	$_id_subcategorias > 0 && $_id_cliente_proveedor  > 0 && $_id_tipo_documentos > 0 && $_id_carton_documentos > 0)
+						{
+					
+								
+							$colval = "id_subcategorias = '$_id_subcategorias', id_cliente_proveedor = '$_id_cliente_proveedor' , id_tipo_documentos = '$_id_tipo_documentos' , id_carton_documentos = '$_id_carton_documentos', numero_poliza_documentos_legal = '$_numero_poliza' , fecha_documentos_legal = '$_fecha_documento_desde' , fecha_desde_documentos_legal = '$_fecha_poliza_desde', fecha_hasta_documentos_legal = '$_fecha_poliza_hasta' , id_soat =  '$_id_soat'  ";
+							$tabla = "documentos_legal";
+							$where_update = "id_documentos_legal = '$_id_documentos_legal' ";
+								
+							$documentos_legal=new DocumentosLegalModel();
+								
+							$documentos_legal->UpdateBy($colval, $tabla, $where_update);
+					
+							
+						}
+					
+				
+				}
+				else
+				{
+						$this->view("Error",array(
+								"resultado"=>"No tiene Permisos de Editar a Documentos"
+					
+						));
+						exit();
+				
+				}
+					
+				
+				
+			}
+			
+				$this->view("Documentos",array(
+						"resultCat"=>$resultCat, "resultSub"=>$resultSub, "resultCli"=>$resultCli, "resultTip"=>$resultTip, "resultCar"=>$resultCar, "resultSet"=>$resultSet, "resultPol"=>$resultPol, "arraySel"=>$arraySel, "resultEdit"=>$resultEdit, "resul"=>$resul  , "paginasTotales"=>$paginasTotales, "registrosTotales"=> $registrosTotales,"hojasTotales"=>$hojasTotales,"resultSoa"=>$resultSoa , "pagina_actual"=>$paginaActual
+					 
+							));
+			
 		}
 		else
 		{
@@ -57,8 +396,6 @@ class DocumentosController extends ControladorBase{
 		}
 	
 	}
-	
-	
 	
 		
 	
@@ -1121,348 +1458,299 @@ class DocumentosController extends ControladorBase{
 		
 		
 		public function buscar(){
-			 
+			require_once 'config/global.php';
+			
 			session_start();
+			
 			$documentos_legal = new DocumentosLegalModel();
-			$columnas = "documentos_legal.id_documentos_legal,  documentos_legal.fecha_documentos_legal, categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos, cliente_proveedor.nombre_cliente_proveedor, carton_documentos.numero_carton_documentos, documentos_legal.paginas_documentos_legal, documentos_legal.fecha_desde_documentos_legal, documentos_legal.fecha_hasta_documentos_legal, documentos_legal.ramo_documentos_legal, documentos_legal.numero_poliza_documentos_legal, documentos_legal.ciudad_emision_documentos_legal, soat.cierre_ventas_soat,   documentos_legal.creado, documentos_legal.numero_credito_documentos_legal, referencia.nombre_referencia , tipo_comprobantes.nombre_tipo_comprobantes, comprobantes.numero_comprobantes , detalle_documentos.nombre_detalle_documentos, regionales.nombre_regionales, sucursales.nombre_sucursales, agencias.nombre_agencias  ";
-			$tablas   = "public.documentos_legal, public.categorias, public.subcategorias, public.tipo_documentos, public.carton_documentos, public.cliente_proveedor, public.soat, public.referencia, public.tipo_comprobantes , public.comprobantes, public.detalle_documentos, public.sucursales, public.agencias, public.regionales";
-			$where    = "categorias.id_categorias = subcategorias.id_categorias AND subcategorias.id_subcategorias = documentos_legal.id_subcategorias AND tipo_documentos.id_tipo_documentos = documentos_legal.id_tipo_documentos AND carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos AND cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor   AND documentos_legal.id_soat = soat.id_soat  AND documentos_legal.id_referencia = referencia.id_referencia AND documentos_legal.id_tipo_comprobantes = tipo_comprobantes.id_tipo_comprobantes AND documentos_legal.id_comprobantes = comprobantes.id_comprobantes AND documentos_legal.id_detalle_comprobantes = detalle_documentos.id_detalle_documentos AND documentos_legal.id_regionales = regionales.id_regionales AND documentos_legal.id_sucursales = sucursales.id_sucursales AND documentos_legal.id_agencias = agencias.id_agencias ";
-			$id       = "documentos_legal.id_documentos_legal";
-				
-				
-			 
-			 
-			$resultSet = $documentos_legal->getCondiciones($columnas ,$tablas ,$where, $id);
-			 
-			 
-			$html="";
-			if(!empty($resultSet))
+			
+			if (isset(  $_SESSION['usuario_usuario']) )
 			{
-		
-				$html .= "<div class='box box-primary'>";
-				$html .= "<div class='box-header'>";
-				$html .= "</div>";
-				$html .= "<div class='box-body'>";
-				$html .= "<table id='tabla_documentos' class='table table-hover table-condensed'>";
-				$html .= "<thead>";
-				$html .= "<tr>";
-				$html.='<th style="text-align: left;  font-size: 10px;">Id</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Fecha</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Subcategoría</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Tipo Documentos</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Cliente</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Carpeta</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Crédito</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Comprobante</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Páginas</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Referencia</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Tipo Comprobante</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Regionales</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Sucursales</th>';
-				$html.='<th style="text-align: left;  font-size: 10px;">Agencias</th>';
-				$html.='</tr>';
-				$html.='</thead>';
-				$html.='<tbody>';
-				 
-				foreach ($resultSet as $res)
+				$nombre_controladores = "Documentos";
+				$id_rol= $_SESSION['id_rol'];
+				$resultPer = $documentos_legal->getPermisosVer("   controladores.nombre_controladores = '$nombre_controladores' AND permisos_rol.id_rol = '$id_rol' " );
+			
+				if (!empty($resultPer))
 				{
-					$html.='<tr>';
-					$html.='<td style="font-size: 9px;">'.$res->id_documentos_legal.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->fecha_documentos_legal.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_subcategorias.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_documentos.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_cliente_proveedor.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->numero_carton_documentos.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->numero_credito_documentos_legal.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->numero_comprobantes.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->paginas_documentos_legal.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_referencia.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_comprobantes.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_regionales.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_sucursales.'</td>';
-					$html.='<td style="font-size: 9px;">'.$res->nombre_agencias.'</td>';
-					$html.='</tr>';
+					if (isset ($_POST["categorias"])  )
+			
+					{
+							
+						///creo el array con los valores seleccionados
+			
+							
+						$arraySel = "";
+						$columnas = "documentos_legal.id_documentos_legal,  documentos_legal.fecha_documentos_legal, categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos, cliente_proveedor.nombre_cliente_proveedor, carton_documentos.numero_carton_documentos, documentos_legal.paginas_documentos_legal, documentos_legal.fecha_desde_documentos_legal, documentos_legal.fecha_hasta_documentos_legal, documentos_legal.ramo_documentos_legal, documentos_legal.numero_poliza_documentos_legal, documentos_legal.ciudad_emision_documentos_legal, soat.cierre_ventas_soat,   documentos_legal.creado, documentos_legal.numero_credito_documentos_legal, referencia.nombre_referencia , tipo_comprobantes.nombre_tipo_comprobantes, comprobantes.numero_comprobantes , detalle_documentos.nombre_detalle_documentos, regionales.nombre_regionales, sucursales.nombre_sucursales, agencias.nombre_agencias  ";
+						$tablas   = "public.documentos_legal, public.categorias, public.subcategorias, public.tipo_documentos, public.carton_documentos, public.cliente_proveedor, public.soat, public.referencia, public.tipo_comprobantes , public.comprobantes, public.detalle_documentos, public.sucursales, public.agencias, public.regionales";
+						$where    = "categorias.id_categorias = subcategorias.id_categorias AND subcategorias.id_subcategorias = documentos_legal.id_subcategorias AND tipo_documentos.id_tipo_documentos = documentos_legal.id_tipo_documentos AND carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos AND cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor   AND documentos_legal.id_soat = soat.id_soat  AND documentos_legal.id_referencia = referencia.id_referencia AND documentos_legal.id_tipo_comprobantes = tipo_comprobantes.id_tipo_comprobantes AND documentos_legal.id_comprobantes = comprobantes.id_comprobantes AND documentos_legal.id_detalle_comprobantes = detalle_documentos.id_detalle_documentos AND documentos_legal.id_regionales = regionales.id_regionales AND documentos_legal.id_sucursales = sucursales.id_sucursales AND documentos_legal.id_agencias = agencias.id_agencias ";
+						$id       = "documentos_legal.fecha_documentos_legal, carton_documentos.numero_carton_documentos";
+							
+							
+						$documentos = new DocumentosLegalModel();
+						$where_1 = "";
+						$where_2 = "";
+						$where_3 = "";
+						$where_4 = "";
+						$where_5 = "";
+						$where_6 = "";
+						$where_7 = "";
+						$where_8 = "";
+						$where_9 = "";
+						$where_10 = "";
+						$where_11 = "";
+						$where_12 = "";
+						$where_13 = "";
+						$where_14 = "";
+						$where_15 = "";
+			
+							
+							
+						$_id_categorias = $_POST["categorias"];
+						$_id_subcategorias = $_POST["subcategorias"];
+						$_id_cliente_proveedor = $_POST["txt_ruc_cliente_proveedor"];
+						$_nombre_cliente_proveedor = strtoupper($_POST["txt_nombre_cliente_proveedor"]);
+							
+						$_id_tipo_documentos = strtoupper($_POST["txt_tipo_documentos"]);
+						$_id_carton_documentos = $_POST["carton_documentos"];
+						$_numero_poliza  = $_POST["numero_poliza"];
+						$_id_soat  = $_POST["cierre_ventas_soat"];
+						$_year     = 	$_POST["year"];
+							
+						$_fecha_documento_desde = $_POST["fecha_documento_desde"];
+						$_fecha_documento_hasta = $_POST["fecha_documento_hasta"];
+						$_fecha_subida_desde = $_POST["fecha_subida_desde"];
+						$_fecha_subida_hasta = $_POST["fecha_subida_hasta"];
+						$_fecha_poliza_desde = $_POST["fecha_poliza_desde"];
+						$_fecha_poliza_hasta = $_POST["fecha_poliza_hasta"];
+			
+						if ($_id_categorias > 0)
+						{
+			
+							$where_1 =  " AND categorias.id_categorias = '$_id_categorias' ";
+			
+						}
+							
+						if ($_id_subcategorias > 0)
+						{
+								
+							$where_2 = " AND subcategorias.id_subcategorias = '$_id_subcategorias' ";
+								
+						}
+						if ($_id_cliente_proveedor != "")
+						{
+			
+							$where_4 = " AND cliente_proveedor.ruc_cliente_proveedor like '$_id_cliente_proveedor' ";
+						}
+							
+						if ($_nombre_cliente_proveedor != "")
+						{
+								
+							$where_3 = " AND cliente_proveedor.nombre_cliente_proveedor like '$_nombre_cliente_proveedor' ";
+						}
+						if ($_id_tipo_documentos != ""    )
+						{
+								
+							$where_5 = " AND tipo_documentos.nombre_tipo_documentos like '$_id_tipo_documentos' ";
+						}
+						if ($_id_carton_documentos != "" )
+						{
+								
+							$where_6 = " AND carton_documentos.numero_carton_documentos like '$_id_carton_documentos' ";
+						}
+							
+						if ($_numero_poliza > 0)
+						{
+							$where_7 = " AND documentos_legal.numero_poliza_documentos_legal = '$_numero_poliza' ";
+						}
+							
+							
+							
+							
+						if ($_fecha_documento_desde != "" && $_fecha_documento_hasta != "")
+						{
+			
+			
+							$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
+						}
+							
+							
+						if($_fecha_documento_desde != "" && $_fecha_documento_hasta == ""){
+			
+							$_fecha_documento_hasta='2018/01/01';
+							$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
+			
+						}
+							
+							
+						if($_fecha_documento_desde == "" && $_fecha_documento_hasta != ""){
+								
+							$_fecha_documento_desde='1800/01/01';
+							$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
+								
+						}
+							
+							
+							
+			
+						if ($_fecha_subida_desde != "" && $_fecha_subida_hasta != "")
+						{
+							$where_9 = " AND DATE(documentos_legal.creado) BETWEEN '$_fecha_subida_desde' AND '$_fecha_subida_hasta'  ";
+						}
+							
+						if ($_fecha_poliza_desde != "" && $_fecha_poliza_hasta != "")
+						{
+							$where_10 = " AND DATE(documentos_legal.fecha_desde_documentos_legal)  BETWEEN '$_fecha_poliza_desde' AND '$_fecha_poliza_hasta'  ";
+						}
+						if ($_year >0)
+						{
+								
+							$where_11 = "  AND TO_CHAR(documentos_legal.fecha_documentos_legal,'YYYY') = '$_year' ";
+						}
+						if ($_id_soat > 0)
+						{
+							$where_12 = "  AND soat.id_soat = '$_id_soat' ";
+						}
+						$resul = $_year;
+						if ($_year > 0)
+						{
+							$fecha_desde = $_year ."-01-01";
+							$fecha_hasta = $_year ."-12-31";
+							$where_13 = "  AND documentos_legal.fecha_documentos_legal BETWEEN '$fecha_desde' AND  '$fecha_hasta'  "  ;
+			
+						}
+			
+			
+						$where_to  = $where . $where_1 . $where_2 . $where_3 . $where_4 . $where_5 . $where_6 . $where_7 . $where_8 . $where_9 . $where_10. $where_11. $where_12. $where_13. $where_14. $where_15;
+							
+			
+						//$resul = $where_to;
+						//$resultSet=$documentos->getCondiciones($columnas ,$tablas ,$where_to, $id);
+						$resultSet=$documentos->getCantidad("*", $tablas, $where_to);
+			
+						$html="";
+						$cantidadResult=0;
+			
+						$cantidadResult=(int)$resultSet[0]->total;
+			
+						$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
+			
+						if($action == 'ajax')
+						{
+			
+							$page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
+			
+							$per_page = 10; //la cantidad de registros que desea mostrar
+							$adjacents  = 10; //brecha entre páginas después de varios adyacentes
+							$offset = ($page - 1) * $per_page;
+			
+							$limit = " LIMIT   '$per_page' OFFSET '$offset'";
+			
+			
+							$resultSet=$documentos->getCondicionesPag($columnas, $tablas, $where_to, $id, $limit);
+			
+							$count_query   = $cantidadResult;
+			
+							$total_pages = ceil($cantidadResult/$per_page);
+			
+							if ($cantidadResult>0)
+							{
+			
+								$html .= '<div class="box box-primary">';
+								$html .= '<div class="box-header">';
+								$html.='<div class="pull-left">';
+								$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
+								$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
+								$html .= '</div>';
+								$html.='</div>';
+								$html.= '<div class="box-body">';
+								$html.='<table class="table table-hover table-condensed">';
+								$html.='<thead>';
+								$html.='<tr>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Id</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Fecha</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Subcategoría</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Tipo Documentos</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Cliente</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Carpeta</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Crédito</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Comprobante</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Páginas</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Referencia</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Tipo Comprobante</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Regionales</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Sucursales</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;">Agencias</th>';
+								$html.='<th style="text-align: left;  font-size: 10px;"></th>';
+								$html.='</tr>';
+								$html.='</thead>';
+								$html.='<tbody>';
+			
+									
+								foreach ($resultSet as $res)
+								{
+									$html.='<tr>';
+									$html.='<td style="font-size: 9px;">'.$res->id_documentos_legal.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->fecha_documentos_legal.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_subcategorias.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_documentos.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_cliente_proveedor.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->numero_carton_documentos.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->numero_credito_documentos_legal.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->numero_comprobantes.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->paginas_documentos_legal.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_referencia.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_comprobantes.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_regionales.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_sucursales.'</td>';
+									$html.='<td style="font-size: 9px;">'.$res->nombre_agencias.'</td>';
+									$html.='<td style="font-size: 9px;">';
+										
+									if ($_SESSION["tipo_usuario"]=="usuario_local") {
+										$html.='<a href="'.IP_INT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
+									} else {
+										$html.=' <a href="'.IP_EXT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
+									}
+									$html.='</td>';
+									$html.='</tr>';
+			
+								}
+			
+								$html.='</tbody>';
+								$html.='</table>';
+								$html .= '</div>';
+								$html .= '</div>';
+								$html.='<div class="table-pagination pull-right">';
+								$html.=''. $this->paginate("index.php", $page, $total_pages, $adjacents).'';
+								$html.='</div>';
+									
+									
+							}else{
+									
+								$html.='<div class="alert alert-warning alert-dismissable">';
+								$html.='<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+								$html.='<h4>Aviso!!!</h4> No hay datos para mostrar';
+								$html.='</div>';
+									
+							}
+								
+			
+							echo $html;
+								
+			
+						}
+			
+			
+					}
+			
 				}
-				 
-				$html .= "</tbody>";
-				$html .= "</table>";
-				$html .= "</div>";
-				$html .= "</div>";
-		
-				 
-			}else{
-				 
-				$html = "<b>Actualmente no hay documentos registrados...</b>";
 			}
-			 
-			echo $html;
-			die();
-			 
-			 
-			 
-			 
-			 
-			 
-			 
 		}
 		
 		
 		
 		
 		
-	public function buscar1111()
-	{
-		
-		session_start();
 	
-		$documentos_legal = new DocumentosLegalModel();
-	
-				
-		
-					$arraySel = "";
-				    $columnas = "documentos_legal.id_documentos_legal,  documentos_legal.fecha_documentos_legal, categorias.nombre_categorias, subcategorias.nombre_subcategorias, tipo_documentos.nombre_tipo_documentos, cliente_proveedor.nombre_cliente_proveedor, carton_documentos.numero_carton_documentos, documentos_legal.paginas_documentos_legal, documentos_legal.fecha_desde_documentos_legal, documentos_legal.fecha_hasta_documentos_legal, documentos_legal.ramo_documentos_legal, documentos_legal.numero_poliza_documentos_legal, documentos_legal.ciudad_emision_documentos_legal, soat.cierre_ventas_soat,   documentos_legal.creado, documentos_legal.numero_credito_documentos_legal, referencia.nombre_referencia , tipo_comprobantes.nombre_tipo_comprobantes, comprobantes.numero_comprobantes , detalle_documentos.nombre_detalle_documentos, regionales.nombre_regionales, sucursales.nombre_sucursales, agencias.nombre_agencias  "; 
-					$tablas   = "public.documentos_legal, public.categorias, public.subcategorias, public.tipo_documentos, public.carton_documentos, public.cliente_proveedor, public.soat, public.referencia, public.tipo_comprobantes , public.comprobantes, public.detalle_documentos, public.sucursales, public.agencias, public.regionales";
-					$where    = "categorias.id_categorias = subcategorias.id_categorias AND subcategorias.id_subcategorias = documentos_legal.id_subcategorias AND tipo_documentos.id_tipo_documentos = documentos_legal.id_tipo_documentos AND carton_documentos.id_carton_documentos = documentos_legal.id_carton_documentos AND cliente_proveedor.id_cliente_proveedor = documentos_legal.id_cliente_proveedor   AND documentos_legal.id_soat = soat.id_soat  AND documentos_legal.id_referencia = referencia.id_referencia AND documentos_legal.id_tipo_comprobantes = tipo_comprobantes.id_tipo_comprobantes AND documentos_legal.id_comprobantes = comprobantes.id_comprobantes AND documentos_legal.id_detalle_comprobantes = detalle_documentos.id_detalle_documentos AND documentos_legal.id_regionales = regionales.id_regionales AND documentos_legal.id_sucursales = sucursales.id_sucursales AND documentos_legal.id_agencias = agencias.id_agencias ";
-					$id       = "documentos_legal.fecha_documentos_legal, carton_documentos.numero_carton_documentos";
-									
-					
-					$documentos = new DocumentosLegalModel();
-					$where_1 = "";
-					$where_2 = "";
-					$where_3 = "";
-					$where_4 = "";
-					$where_5 = "";
-					$where_6 = "";
-					$where_7 = "";
-					$where_8 = "";
-					$where_9 = "";
-					$where_10 = "";
-					$where_11 = "";
-					$where_12 = "";
-					$where_13 = "";
-					$where_14 = "";
-					$where_15 = "";
-						
-					
-					
-					$_id_categorias = (isset($_REQUEST['categorias'])&& $_REQUEST['categorias'] !=NULL)?$_REQUEST['categorias']:0;
-					$_id_subcategorias = (isset($_REQUEST['subcategorias'])&& $_REQUEST['subcategorias'] !=NULL)?$_REQUEST['subcategorias']:0;
-					$_id_cliente_proveedor = (isset($_REQUEST['txt_ruc_cliente_proveedor'])&& $_REQUEST['txt_ruc_cliente_proveedor'] !=NULL)?$_REQUEST['txt_ruc_cliente_proveedor']:'';
-					$_nombre_cliente_proveedor = (isset($_REQUEST['txt_nombre_cliente_proveedor'])&& $_REQUEST['txt_nombre_cliente_proveedor'] !=NULL)?$_REQUEST['txt_nombre_cliente_proveedor']:'';
-					$_id_tipo_documentos = (isset($_REQUEST['txt_tipo_documentos'])&& $_REQUEST['txt_tipo_documentos'] !=NULL)?$_REQUEST['txt_tipo_documentos']:'';
-					$_id_carton_documentos = (isset($_REQUEST['carton_documentos'])&& $_REQUEST['carton_documentos'] !=NULL)?$_REQUEST['carton_documentos']:'';
-					$_year = (isset($_REQUEST['year'])&& $_REQUEST['year'] !=NULL)?$_REQUEST['year']:0;
-					$_fecha_documento_desde = (isset($_REQUEST['fecha_documento_desde'])&& $_REQUEST['fecha_documento_desde'] !=NULL)?$_REQUEST['fecha_documento_desde']:'';
-					$_fecha_documento_hasta = (isset($_REQUEST['fecha_documento_hasta'])&& $_REQUEST['fecha_documento_hasta'] !=NULL)?$_REQUEST['fecha_documento_hasta']:'';
-						
-					
-		        	if ($_id_categorias > 0)
-					{
-		
-						$where_1 =  " AND categorias.id_categorias = '$_id_categorias' ";
-						
-					}
-					
-					if ($_id_subcategorias > 0)
-					{
-					
-						$where_2 = " AND subcategorias.id_subcategorias = '$_id_subcategorias' ";
-					
-					}
-					if ($_id_cliente_proveedor != "")
-					{
-						
-						$where_4 = " AND cliente_proveedor.ruc_cliente_proveedor like '$_id_cliente_proveedor' ";
-					}	
-					
-					if ($_nombre_cliente_proveedor != "")
-					{
-					
-						$where_3 = " AND cliente_proveedor.nombre_cliente_proveedor like '$_nombre_cliente_proveedor' ";
-					}
-					if ($_id_tipo_documentos != ""    )
-					{
-					
-						$where_5 = " AND tipo_documentos.nombre_tipo_documentos like '$_id_tipo_documentos' ";
-					}
-					if ($_id_carton_documentos != "" )
-					{
-							
-						$where_6 = " AND carton_documentos.numero_carton_documentos like '$_id_carton_documentos' ";
-					}
-					
-					
-					
-					
-					
-					
-					if ($_fecha_documento_desde != "" && $_fecha_documento_hasta != "")
-					{
-						
-						
-						$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
-					}
-					
-					
-					if($_fecha_documento_desde != "" && $_fecha_documento_hasta == ""){
-						
-						$_fecha_documento_hasta='2018/01/01';
-						$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
-						
-					}
-					
-					
-					if($_fecha_documento_desde == "" && $_fecha_documento_hasta != ""){
-					
-						$_fecha_documento_desde='1800/01/01';
-						$where_8 = " AND DATE(documentos_legal.fecha_documentos_legal) BETWEEN '$_fecha_documento_desde' AND '$_fecha_documento_hasta'  ";
-					
-					}
-					
-					
-					
-		
-					if ($_year >0)
-					{
-							
-						$where_11 = "  AND TO_CHAR(documentos_legal.fecha_documentos_legal,'YYYY') = '$_year' ";
-					}
-					
-					$resul = $_year;
-					if ($_year > 0)
-					{
-						$fecha_desde = $_year ."-01-01";
-						$fecha_hasta = $_year ."-12-31";
-						$where_13 = "  AND documentos_legal.fecha_documentos_legal BETWEEN '$fecha_desde' AND  '$fecha_hasta'  "  ;
-										
-					}
-						
-		
-					$where_to  = $where . $where_1 . $where_2 . $where_3 . $where_4 . $where_5 . $where_6 . $where_7 . $where_8 . $where_9 . $where_10. $where_11. $where_12. $where_13. $where_14. $where_15;
-					
-	
-					//$resul = $where_to;
-					//$resultSet=$documentos->getCondiciones($columnas ,$tablas ,$where_to, $id);
-					$resultSet=$documentos->getCantidad("*", $tablas, $where_to);
-	
-					$html="";
-					$cantidadResult=0;
-	
-					$cantidadResult=(int)$resultSet[0]->total;
-	
-					$action = (isset($_REQUEST['action'])&& $_REQUEST['action'] !=NULL)?$_REQUEST['action']:'';
-	
-					if($action == 'ajax')
-					{
-	
-						$page = (isset($_REQUEST['page']) && !empty($_REQUEST['page']))?$_REQUEST['page']:1;
-	
-						$per_page = 10; //la cantidad de registros que desea mostrar
-						$adjacents  = 10; //brecha entre páginas después de varios adyacentes
-						$offset = ($page - 1) * $per_page;
-	
-						$limit = " LIMIT   '$per_page' OFFSET '$offset'";
-	
-	
-						$resultSet=$documentos->getCondicionesPag($columnas, $tablas, $where_to, $id, $limit);
-	
-						$count_query   = $cantidadResult;
-	
-						$total_pages = ceil($cantidadResult/$per_page);
-	
-						if ($cantidadResult>0)
-						{
-	
-							$html .= '<div class="box box-primary">';
-							$html .= '<div class="box-header">';
-							$html.='<div class="pull-left">';
-							$html.='<span class="form-control"><strong>Registros: </strong>'.$cantidadResult.'</span>';
-							$html.='<input type="hidden" value="'.$cantidadResult.'" id="total_query" name="total_query"/>' ;
-							$html .= '</div>';
-							$html.='</div>';
-							$html.= '<div class="box-body">';
-							$html.='<table class="table table-hover table-condensed">';
-							$html.='<thead>';
-							$html.='<tr>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Id</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Fecha</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Subcategoría</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Tipo Documentos</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Cliente</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Carpeta</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Crédito</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Comprobante</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Páginas</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Referencia</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Tipo Comprobante</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Regionales</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Sucursales</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;">Agencias</th>';
-							$html.='<th style="text-align: left;  font-size: 10px;"></th>';
-							$html.='</tr>';
-							$html.='</thead>';
-							$html.='<tbody>';
-								
-							
-							foreach ($resultSet as $res)
-							{
-								$html.='<tr>';
-								$html.='<td style="font-size: 9px;">'.$res->id_documentos_legal.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->fecha_documentos_legal.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_subcategorias.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_documentos.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_cliente_proveedor.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->numero_carton_documentos.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->numero_credito_documentos_legal.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->numero_comprobantes.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->paginas_documentos_legal.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_referencia.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_tipo_comprobantes.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_regionales.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_sucursales.'</td>';
-								$html.='<td style="font-size: 9px;">'.$res->nombre_agencias.'</td>';
-								$html.='<td style="font-size: 9px;">';
-									
-								if ($_SESSION["tipo_usuario"]=="usuario_local") {
-									$html.='<a href="'.IP_INT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
-								} else {
-									$html.=' <a href="'.IP_EXT . $res->id_documentos_legal.'" class="btn btn-warning" target="blank" style="font-size:90%;">Ver</a>';
-								}
-								$html.='</td>';
-								$html.='</tr>';
-								
-							}
-								
-							$html.='</tbody>';
-							$html.='</table>';
-							$html .= '</div>';
-							$html .= '</div>';
-							$html.='<div class="table-pagination pull-right">';
-							$html.=''. $this->paginate("index.php", $page, $total_pages, $adjacents).'';
-							$html.='</div>';
-							
-							
-							}else{
-							
-								$html.='<div class="alert alert-warning alert-dismissable">';
-								$html.='<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
-								$html.='<h4>Aviso!!!</h4> No hay datos para mostrar';
-								$html.='</div>';
-							
-							}
-							
-	
-						echo $html;
-							
-	
-					
-
-	
-				}
-	
-			
-		
-	}
 	
 	
 	public function paginate($reload, $page, $tpages, $adjacents) {
