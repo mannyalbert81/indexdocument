@@ -3,16 +3,12 @@
      <head>
         <meta charset="utf-8"/>
         <title>Busqueda de Documentos - aDocument 2015</title>
-          <?php include("view/modulos/links.php"); ?>
+           <?php include("view/modulos/links.php"); ?>
+           <link rel="stylesheet" href="view/adminLTE/plugins/datatables/dataTables.bootstrap.css">
           
-          <script type="text/javascript">
-          $(document).ready(function(){
-        	  lista_documentos();
-      	});
-
-          </script>
+          
     </head>
-    <body>
+    <body onload="lista_documentos();">
     <div class="wrapper">
  
       <header class="main-header">
@@ -171,12 +167,12 @@
 	    <div class="control-sidebar-bg"></div>
 	    </div>
        
-    <div class="MsjAjaxForm"></div>
-	<?php include "view/modulos/script.php"; ?>
+   <div class="MsjAjaxForm"></div>
+	    <?php include "view/modulos/script.php"; ?>
     <script src="view/adminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="view/adminLTE/plugins/datatables/dataTables.bootstrap.min.js"></script>  
     <script src="view/adminLTE/plugins/noty/packaged/jquery.noty.packaged.min.js"></script> 
-    <script src="view/adminLTE/dist/js/source_documentos.js"></script> 
+   <script src="view/adminLTE/dist/js/source_documentos.js"></script> 
      
     </body>  
     </html>
